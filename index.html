@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lana Store PRO MAX</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+body{
+margin:0;
+font-family:'Kanit',sans-serif;
+background:linear-gradient(180deg,#ffeaf2,#fff5f9);
+padding-bottom:90px;
+}
+
+/* PAGE */
+.page{
+display:none;
+opacity:0;
+transform:translateY(20px);
+transition:0.3s;
+}
+.active{
+display:block;
+opacity:1;
+transform:translateY(0);
+}
+
+/* HEADER */
+.header{
+padding:15px;
+display:flex;
+justify-content:space-between;
+font-weight:600;
+}
+
+/* SEARCH */
+.search{
+width:90%;
+margin:10px;
+padding:10px;
+border-radius:15px;
+border:none;
+}
+
+/* CARD */
+.card{
+background:#fff;
+margin:10px;
+padding:15px;
+border-radius:25px;
+box-shadow:0 8px 20px rgba(255,105,150,0.15);
+}
+
+/* STATUS */
+.wait{background:#ffd9e7}
+.doing{background:#ffe8c2}
+.done{background:#d6ffe5}
+
+/* BUTTON */
+button{
+border:none;
+padding:6px 10px;
+border-radius:10px;
+background:#ff5f93;
+color:#fff;
+margin-top:5px;
+}
+
+/* STEP */
+.step{
+display:flex;
+gap:5px;
+margin-top:8px;
+}
+.stepItem{
+flex:1;
+height:6px;
+border-radius:10px;
+background:#eee;
+}
+.stepActive{
+background:#ff5f93;
+}
+
+/* NAV */
+.nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:#fff;
+display:flex;
+justify-content:space-around;
+padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+box-shadow:0 -5px 20px rgba(0,0,0,0.08);
+border-top-left-radius:25px;
+border-top-right-radius:25px;
+}
+
+/* NAV ITEM */
+.navItem{
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:11px;
+color:#aaa;
+position:relative;
+}
+.navIcon{
+width:26px;
+height:26px;
+margin-bottom:3px;
+}
+.activeNav{
+color:#ff5f93;
+font-weight:600;
+}
+
+/* BADGE */
+.badgeRed{
+position:absolute;
+top:-3px;
+right:-5px;
+background:red;
+color:#fff;
+font-size:10px;
+padding:2px 5px;
+border-radius:10px;
+}
+
+/* BILL */
+.bill{
+width:320px;
+margin:auto;
+padding:15px;
+background:#fffdf8;
+border-radius:25px;
+border:3px dashed #ffb6c1;
+font-family:'Patrick Hand',cursive;
+text-align:center;
+}
+.total{
+background:#ffe0ec;
+padding:10px;
+border-radius:15px;
+}
+.qr{
+width:120px;
+margin:10px auto;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HOME -->
+<div id="home" class="page active">
+
+<div class="header">
+🐰 Lana Store 🔔 <span id="noti">0</span>
+</div>
+
+<input class="search" placeholder="ค้นหา..." oninput="search(this.value)">
+
+<div id="list"></div>
+
+</div>
+
+<!-- ADD -->
+<div id="addPage" class="page">
+<div class="card">
+<input id="name" class="search" placeholder="ชื่อลูกค้า">
+
+<select id="qty" class="search">
+<option value="8">8</option>
+<option value="16">16</option>
+<option value="24">24</option>
+<option value="32">32</option>
+</select>
+
+<button onclick="save()">บันทึก</button>
+</div>
+</div>
+
+<!-- WALLET -->
+<div id="wallet" class="page">
+<div class="card" style="background:#ff5f93;color:#fff">
+💰 รายได้ทั้งหมด
+<h2 id="money">0</h2>
+</div>
+</div>
+
+<!-- BILL -->
+<div id="billPage" class="page">
+<div class="bill" id="billBox">
+
+<h2>🎀 Lana Store 🎀</h2>
+
+<p>ลูกค้า: <span id="bName"></span></p>
+<p>จำนวน: <span id="bQty"></span></p>
+<p>ราคา: <span id="bPrice"></span></p>
+
+<div class="total">
+รวมทั้งหมด  
+<h2 id="bTotal"></h2>
+</div>
+
+<img class="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=0972962083">
+
+<hr>
+
+TrueWallet: 0972962083 <br>
+SCB: 9692138645 <br>
+PromptPay: 0841169561
+
+</div>
+
+<button onclick="saveImg()">📸 บันทึกรูป</button>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+
+<div class="navItem activeNav" onclick="show('home');setNav(this)">
+<img class="navIcon" src="https://cdn-icons-png.flaticon.com/512/1946/1946436.png">
+หน้าหลัก
+</div>
+
+<div class="navItem" onclick="show('wallet');setNav(this)">
+<img class="navIcon" src="https://cdn-icons-png.flaticon.com/512/2331/2331943.png">
+รายได้
+</div>
+
+<div class="navItem" onclick="show('addPage');setNav(this)">
+<img class="navIcon" src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png">
+เพิ่ม
+</div>
+
+<div class="navItem" onclick="show('billPage');setNav(this)">
+<img class="navIcon" src="https://cdn-icons-png.flaticon.com/512/2838/2838912.png">
+บิล
+<span class="badgeRed" id="notiBadge">0</span>
+</div>
+
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("data")||"[]");
+
+/* NAV */
+function setNav(el){
+document.querySelectorAll(".navItem").forEach(e=>e.classList.remove("activeNav"));
+el.classList.add("activeNav");
+}
+
+/* PAGE */
+function show(p){
+document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));
+setTimeout(()=>{document.getElementById(p).classList.add("active");},50);
+render();
+}
+
+/* ADD */
+function save(){
+let price = qty.value==8?150:
+qty.value==16?250:
+qty.value==24?450:600;
+
+data.push({
+name:name.value,
+qty:qty.value,
+price:price,
+status:"wait"
+});
+
+saveData();
+show("home");
+}
+
+/* SAVE */
+function saveData(){
+localStorage.setItem("data",JSON.stringify(data));
+render();
+}
+
+/* RENDER */
+function render(listData=data){
+let html="",money=0;
+
+listData.forEach((r,i)=>{
+money+=r.price;
+
+html+=`
+<div class="card ${r.status}">
+💖 ${r.name}<br>
+📦 ${r.qty} รูป<br>
+💰 ${r.price} บาท
+
+<div class="step">
+<div class="stepItem ${r.status!='wait'?'stepActive':''}"></div>
+<div class="stepItem ${r.status=='doing'||r.status=='done'?'stepActive':''}"></div>
+<div class="stepItem ${r.status=='done'?'stepActive':''}"></div>
+</div>
+
+<button onclick="next(${i})">➡️</button>
+<button onclick="bill(${i})">🧾</button>
+<button onclick="del(${i})">🗑️</button>
+</div>
+`;
+});
+
+list.innerHTML=html;
+moneyEl.innerText=money;
+noti.innerText=data.length;
+notiBadge.innerText=data.length;
+}
+
+/* STATUS */
+function next(i){
+let s=data[i].status;
+data[i].status = s=="wait"?"doing":s=="doing"?"done":"wait";
+saveData();
+}
+
+/* DELETE */
+function del(i){
+data.splice(i,1);
+saveData();
+}
+
+/* BILL */
+function bill(i){
+let r=data[i];
+bName.innerText=r.name;
+bQty.innerText=r.qty+" รูป";
+bPrice.innerText=r.price+" บาท";
+bTotal.innerText=r.price+" บาท";
+show("billPage");
+}
+
+/* SAVE IMAGE */
+function saveImg(){
+html2canvas(document.getElementById("billBox")).then(canvas=>{
+let link=document.createElement("a");
+link.download="bill.png";
+link.href=canvas.toDataURL();
+link.click();
+});
+}
+
+/* SEARCH */
+function search(q){
+render(data.filter(x=>x.name.includes(q)));
+}
+
+render();
+</script>
+
+</body>
+</html>
