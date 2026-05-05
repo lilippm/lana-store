@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lana Store UI PRO</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:'Kanit',sans-serif;
+background:#fff5f8;
+padding-bottom:90px;
+}
+
+/* HEADER */
+.header{
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.title{
+display:flex;
+align-items:center;
+gap:10px;
+font-weight:600;
+font-size:18px;
+}
+
+.avatar{
+width:40px;
+height:40px;
+border-radius:50%;
+background:#ffd9e7;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+}
+
+.bell{
+position:relative;
+font-size:20px;
+}
+.badge{
+position:absolute;
+top:-5px;
+right:-5px;
+background:red;
+color:#fff;
+font-size:10px;
+padding:2px 5px;
+border-radius:10px;
+}
+
+/* SEARCH */
+.search{
+margin:10px;
+padding:12px;
+border-radius:20px;
+background:#fff;
+box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* TABS */
+.tabs{
+display:flex;
+gap:8px;
+margin:10px;
+overflow-x:auto;
+}
+.tab{
+padding:6px 14px;
+border-radius:20px;
+background:#fff;
+font-size:12px;
+}
+.activeTab{
+background:#ff5f93;
+color:#fff;
+}
+
+/* CARD */
+.card{
+background:#fff;
+margin:10px;
+padding:12px;
+border-radius:20px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+box-shadow:0 3px 10px rgba(0,0,0,0.05);
+}
+
+/* LEFT */
+.left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.num{
+width:22px;
+height:22px;
+border-radius:50%;
+background:#ff5f93;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:12px;
+}
+
+.img{
+width:40px;
+height:40px;
+border-radius:15px;
+background:#ffe0ec;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+}
+
+/* STATUS */
+.status{
+font-size:11px;
+padding:4px 8px;
+border-radius:10px;
+}
+.wait{background:#ffd9e7}
+.doing{background:#ffe8c2}
+.done{background:#d6ffe5}
+
+/* PRICE */
+.price{
+color:#ff5f93;
+font-weight:600;
+}
+
+/* NAV */
+.nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:#fff;
+display:flex;
+justify-content:space-around;
+padding:10px;
+box-shadow:0 -5px 20px rgba(0,0,0,0.1);
+}
+.navItem{
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:11px;
+color:#aaa;
+}
+.activeNav{
+color:#ff5f93;
+}
+
+/* FAB */
+.fab{
+position:fixed;
+bottom:70px;
+left:50%;
+transform:translateX(-50%);
+width:60px;
+height:60px;
+border-radius:50%;
+background:#ff5f93;
+color:#fff;
+font-size:30px;
+border:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<div class="title">
+<div class="avatar">🐰</div>
+Lana Store
+</div>
+
+<div class="bell">
+🔔
+<div class="badge" id="noti">0</div>
+</div>
+</div>
+
+<div class="search">🔍 ค้นหาชื่อลูกค้า</div>
+
+<div class="tabs">
+<div class="tab activeTab">ทั้งหมด</div>
+<div class="tab">รอคิว</div>
+<div class="tab">กำลังทำ</div>
+<div class="tab">เสร็จ</div>
+</div>
+
+<div id="list"></div>
+
+<div class="nav">
+<div class="navItem activeNav">🏠<br>หน้าหลัก</div>
+<div class="navItem">💰<br>รายได้</div>
+<div class="navItem">📒<br>บันทึก</div>
+<div class="navItem">⚙️<br>ตั้งค่า</div>
+</div>
+
+<button class="fab" onclick="add()">+</button>
+
+<script>
+let data = [
+{name:"คุณมีนี่",qty:"16",price:250,status:"wait"},
+{name:"คุณแพรวา",qty:"24",price:450,status:"doing"},
+{name:"คุณเฟิร์น",qty:"32",price:600,status:"done"},
+{name:"คุณมิ้ว",qty:"8",price:150,status:"wait"}
+];
+
+function render(){
+let html="";
+
+data.forEach((r,i)=>{
+
+html+=`
+<div class="card">
+<div class="left">
+<div class="num">${i+1}</div>
+<div class="img">🐰</div>
+<div>
+<b>${r.name}</b><br>
+<span class="status ${r.status}">
+${r.status=="wait"?"รอคิว":r.status=="doing"?"กำลังทำ":"เสร็จ"}
+</span>
+</div>
+</div>
+
+<div>
+<div class="price">${r.price}฿</div>
+</div>
+</div>
+`;
+});
+
+list.innerHTML=html;
+noti.innerText=data.length;
+}
+
+function add(){
+data.push({name:"ลูกค้าใหม่",qty:"8",price:150,status:"wait"});
+render();
+}
+
+render();
+</script>
+
+</body>
+</html>
