@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="index" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#fff3f7;
+}
+
+/* NAV */
+.nav{
+  position:fixed;
+  bottom:15px;
+  left:50%;
+  transform:translateX(-50%);
+  width:90%;
+  background:white;
+  border-radius:30px;
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* PAGE */
+.page{display:none;padding-bottom:100px;}
+.active{display:block;}
+
+/* CARD */
+.card{
+  background:white;
+  margin:10px;
+  padding:15px;
+  border-radius:20px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:10px;
+}
+
+/* BUTTON */
+.btn{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:20px;
+  background:#ff9ecb;
+  color:white;
+}
+
+/* FAB */
+.fab{
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%);
+  width:65px;
+  height:65px;
+  border-radius:50%;
+  background:#ff9ecb;
+  color:white;
+  font-size:30px;
+  border:none;
+}
+
+/* POPUP */
+.popup{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.box{
+  width:90%;
+  background:white;
+  border-radius:25px;
+  padding:20px;
+}
+
+/* INPUT */
+.input{
+  width:100%;
+  padding:14px;
+  border-radius:15px;
+  border:none;
+  background:#f7f7f7;
+  margin:8px 0;
+}
+</style>
+</head>
+
+<body>
+
+<!-- DASHBOARD -->
+<div id="home" class="page active">
+  <div class="grid">
+    <div class="card">📦 คิวทั้งหมด<br><b id="total">0</b></div>
+    <div class="card">💰 รายได้<br><b id="money">0</b></div>
+  </div>
+  <div id="list"></div>
+</div>
+
+<!-- WALLET -->
+<div id="wallet" class="page">
+  <div class="card">
+    💸 เพิ่มรายได้
+    <input class="input" id="income">
+    <button class="btn" onclick="addMoney()">บันทึก</button>
+  </div>
+  <div class="card">
+    💰 ยอดรวม: <b id="totalMoney">0</b>
+  </div>
+</div>
+
+<!-- DIARY -->
+<div id="diary" class="page">
+  <div class="card">
+    📝 บันทึกวันนี้
+    <textarea class="input" id="note"></textarea>
+    <button class="btn" onclick="saveNote()">บันทึก</button>
+  </div>
+  <div id="notes"></div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div onclick="showPage('home')">🏠</div>
+  <div onclick="showPage('wallet')">💸</div>
+  <div onclick="showPage('diary')">📒</div>
+</div>
+
+<button class="fab" onclick="openPopup()">+</button>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="box">
+    <h3>เพิ่มคิว ✨</h3>
+
+    <input id="name" class="input" placeholder="ชื่อลูกค้า">
+
+    <select id="type" class="input">
+      <option>สติกเกอร์ message</option>
+      <option>ตัดรูปโปร่งใส</option>
+      <option>สติกเกอร์ไลน์</option>
+    </select>
+
+    <select id="qty" class="input">
+      <option>8รูป</option>
+      <option>16รูป</option>
+      <option>24รูป</option>
+      <option>32รูป</option>
+    </select>
+
+    <button class="btn" onclick="save()">บันทึก</button>
+    <br><br>
+    <span onclick="closePopup()">ปิด</span>
+  </div>
+</div>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("queue")||"[]");
+let totalMoney = Number(localStorage.getItem("money")||0);
+
+function showPage(p){
+  document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));
+  document.getElementById(p).classList.add("active");
+}
+
+function openPopup(){ popup.style.display="flex"; }
+function closePopup(){ popup.style.display="none"; }
+
+function render(){
+  let html="";
+  let total=0;
+  let money=totalMoney;
+
+  data.forEach((r,i)=>{
+    total++;
+    html+=`
+    <div class="card">
+      💖 ${r.name}<br>
+      📌 ${r.type} (${r.qty})<br>
+      💰 ${r.price} บาท<br>
+      🔢 คิว ${i+1}
+    </div>`;
+  });
+
+  list.innerHTML=html;
+  totalEl.innerText=total;
+  moneyEl.innerText=money;
+  totalMoneyEl.innerText=money;
+}
+
+function save(){
+  let price=0;
+
+  if(qty.value=="8รูป") price=150;
+  if(qty.value=="16รูป") price=250;
+  if(qty.value=="24รูป") price=450;
+  if(qty.value=="32รูป") price=600;
+
+  let item={
+    name:name.value,
+    type:type.value,
+    qty:qty.value,
+    price:price
+  };
+
+  data.push(item);
+  totalMoney += price;
+
+  localStorage.setItem("queue", JSON.stringify(data));
+  localStorage.setItem("money", totalMoney);
+
+  closePopup();
+  render();
+}
+
+function addMoney(){
+  let v = Number(income.value||0);
+  totalMoney += v;
+  localStorage.setItem("money", totalMoney);
+  render();
+}
+
+function saveNote(){
+  notes.innerHTML += `<div class="card">📝 ${note.value}</div>`;
+  note.value="";
+}
+
+const list = document.getElementById("list");
+const totalEl = document.getElementById("total");
+const moneyEl = document.getElementById("money");
+const totalMoneyEl = document.getElementById("totalMoney");
+
+render();
+
+</script>
+
+</body>
+</html>
