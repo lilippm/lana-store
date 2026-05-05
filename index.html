@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ระบบคิว Lana Store</title>
+
+<style>
+body{
+  font-family:sans-serif;
+  background:#ffeef5;
+  text-align:center;
+}
+
+.card{
+  background:white;
+  margin:10px;
+  padding:15px;
+  border-radius:20px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.btn{
+  background:#ff9ecb;
+  border:none;
+  padding:10px 20px;
+  border-radius:20px;
+  color:white;
+  cursor:pointer;
+}
+
+/* สีสถานะ */
+.status-รอคิว{background:#ffd6e7;}
+.status-กำลังดำเนินงาน{background:#fff3cd;}
+.status-ตัดแต่ง{background:#d4edda;}
+.status-รอผลอนุมัติ{background:#cce5ff;}
+.status-แก้ไขงาน{background:#f8d7da;}
+.status-ส่งงานเรียบร้อย{background:#d1ffd6;}
+
+</style>
+</head>
+
+<body>
+
+<h2>🎀 Lana Store Queue</h2>
+
+<input id="search" placeholder="🔍 ค้นหาชื่อลูกค้า">
+
+<div id="list"></div>
+
+<button class="btn" onclick="openForm()">+ เพิ่มคิว</button>
+
+<!-- POPUP -->
+<div id="popup" style="display:none;">
+  <div class="card">
+    <h3>เพิ่มคิว ✨</h3>
+
+    <input id="name" placeholder="ชื่อลูกค้า"><br><br>
+
+    <select id="type">
+      <option>สติกเกอร์ message</option>
+      <option>ตัดรูปโปร่งใส (ลูกค้า)</option>
+      <option>ตัดรูปโปร่งใส (แม่ค้า)</option>
+      <option>สติกเกอร์ไลน์ 32 รูป</option>
+    </select><br><br>
+
+    <select id="qty">
+      <option>8รูป</option>
+      <option>16รูป</option>
+      <option>24รูป</option>
+      <option>32รูป</option>
+    </select><br><br>
+
+    <button class="btn" onclick="save()">บันทึก</button>
+  </div>
+</div>
+
+<script>
+function load(){
+  google.script.run.withSuccessHandler(show).getData();
+}
+
+function show(data){
+  let html="";
+  data.slice(1).forEach((r,i)=>{
+    html+=`
+    <div class="card status-${r[4]}">
+      💖 ${r[1]} <br>
+      📌 ${r[2]} <br>
+      📦 ${r[3]} <br>
+      📍 สถานะ: ${r[4]} <br>
+      🔢 คิวที่ ${i+1}
+    </div>
+    `;
+  });
+  document.getElementById("list").innerHTML=html;
+}
+
+function openForm(){
+  document.getElementById("popup").style.display="block";
+}
+
+function save(){
+  const name=document.getElementById("name").value;
+  const type=document.getElementById("type").value;
+  const qty=document.getElementById("qty").value;
+
+  let price=0;
+
+  if(qty=="8รูป") price=150;
+  if(qty=="16รูป") price=250;
+  if(qty=="24รูป") price=450;
+  if(qty=="32รูป") price=600;
+
+  google.script.run.addQueue({
+    name:name,
+    type:type,
+    qty:qty,
+    price:price,
+    detail:""
+  });
+
+  alert("เพิ่มคิวสำเร็จ 💖");
+  load();
+}
+
+load();
+</script>
+
+</body>
+</html>
