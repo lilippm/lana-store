@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lana Store</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:'Kanit',sans-serif;
+background:#fff4f7;
+padding-bottom:90px;
+}
+
+/* PAGE SYSTEM */
+.page{display:none;}
+.active{display:block;}
+
+/* HEADER */
+.header{
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.title{
+display:flex;
+align-items:center;
+gap:10px;
+font-weight:600;
+font-size:18px;
+}
+
+.logo{
+width:40px;
+height:40px;
+border-radius:50%;
+}
+
+/* NOTI */
+.bell{position:relative;}
+.badge{
+position:absolute;
+top:-5px;
+right:-5px;
+background:#ff3b3b;
+color:#fff;
+font-size:10px;
+padding:2px 6px;
+border-radius:10px;
+}
+
+/* SEARCH */
+.search{
+margin:10px;
+background:#fff;
+padding:12px;
+border-radius:20px;
+box-shadow:0 3px 10px rgba(0,0,0,0.05);
+}
+
+/* TABS */
+.tabs{
+display:flex;
+gap:8px;
+margin:10px;
+overflow-x:auto;
+}
+
+.tab{
+padding:6px 14px;
+border-radius:20px;
+background:#fff;
+font-size:12px;
+color:#555;
+cursor:pointer;
+}
+
+.activeTab{
+background:#ff5f93;
+color:#fff;
+font-weight:600;
+}
+
+/* CARD */
+.card{
+background:#fff;
+margin:10px;
+padding:12px;
+border-radius:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 5px 15px rgba(255,105,150,0.08);
+}
+
+/* LEFT */
+.left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.num{
+width:24px;
+height:24px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-size:12px;
+}
+
+.n1{background:#ff6b9a}
+.n2{background:#ffa726}
+.n3{background:#4caf50}
+.n4{background:#9c27b0}
+
+.avatar{
+width:45px;
+height:45px;
+border-radius:15px;
+background:#ffe0ec;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.avatar img{width:35px;}
+
+/* STATUS */
+.status{
+font-size:11px;
+padding:4px 10px;
+border-radius:12px;
+font-weight:500;
+}
+
+.wait{background:#ffd9e7;color:#ff5f93}
+.doing{background:#ffe8c2;color:#ff9800}
+.done{background:#d6ffe5;color:#2ecc71}
+
+/* RIGHT */
+.right{text-align:right;}
+.price{color:#ff5f93;font-weight:600;}
+
+/* NAV */
+.nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:#fff;
+display:flex;
+justify-content:space-around;
+padding:12px 0;
+box-shadow:0 -5px 20px rgba(0,0,0,0.08);
+border-top-left-radius:20px;
+border-top-right-radius:20px;
+}
+
+.navItem{
+font-size:11px;
+color:#999;
+text-align:center;
+cursor:pointer;
+}
+
+.activeNav{
+color:#ff5f93;
+font-weight:600;
+}
+
+/* FAB */
+.fab{
+position:fixed;
+bottom:75px;
+left:50%;
+transform:translateX(-50%);
+width:60px;
+height:60px;
+border-radius:50%;
+background:#ff5f93;
+color:#fff;
+font-size:30px;
+border:none;
+box-shadow:0 5px 20px rgba(255,105,150,0.4);
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HOME ================= -->
+<div id="home" class="page active">
+
+<div class="header">
+<div class="title">
+<img class="logo" src="https://cdn-icons-png.flaticon.com/512/616/616408.png">
+Lana Store
+</div>
+
+<div class="bell">
+🔔
+<div class="badge" id="noti">0</div>
+</div>
+</div>
+
+<div class="search">🔍 ค้นหาชื่อลูกค้า</div>
+
+<div class="tabs">
+<div class="tab activeTab" onclick="setFilter('all',this)">ทั้งหมด</div>
+<div class="tab" onclick="setFilter('wait',this)">รอคิว</div>
+<div class="tab" onclick="setFilter('doing',this)">กำลังทำ</div>
+<div class="tab" onclick="setFilter('done',this)">เสร็จ</div>
+</div>
+
+<div id="list"></div>
+
+</div>
+
+<!-- ================= WALLET ================= -->
+<div id="wallet" class="page">
+<div style="padding:20px">
+<h2>💰 รายได้ทั้งหมด</h2>
+<h1 id="money">0 บาท</h1>
+</div>
+</div>
+
+<!-- ================= NOTE ================= -->
+<div id="note" class="page">
+<div style="padding:20px">
+<h2>📒 บันทึก</h2>
+<textarea style="width:100%;height:150px;border-radius:10px;border:none;padding:10px;"></textarea>
+</div>
+</div>
+
+<!-- ================= SETTINGS ================= -->
+<div id="settings" class="page">
+<div style="padding:20px">
+<h2>⚙️ ตั้งค่า</h2>
+<p>ชื่อร้าน: Lana Store</p>
+<p>Line: @fvd2237h</p>
+</div>
+</div>
+
+<!-- ================= NAV ================= -->
+<div class="nav">
+<div class="navItem activeNav" onclick="show('home',this)">🏠<br>หน้าหลัก</div>
+<div class="navItem" onclick="show('wallet',this)">💰<br>รายได้</div>
+<div class="navItem" onclick="show('note',this)">📒<br>บันทึก</div>
+<div class="navItem" onclick="show('settings',this)">⚙️<br>ตั้งค่า</div>
+</div>
+
+<button class="fab" onclick="add()">+</button>
+
+<script>
+let data=[
+{name:"คุณมีนี่",qty:"16",price:250,status:"wait"},
+{name:"คุณแพรวา",qty:"24",price:450,status:"doing"},
+{name:"คุณเฟิร์น",qty:"32",price:600,status:"done"},
+{name:"คุณมิ้ว",qty:"8",price:150,status:"wait"}
+];
+
+let filter="all";
+
+/* PAGE SWITCH */
+function show(page,el){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(page).classList.add("active");
+
+document.querySelectorAll(".navItem").forEach(n=>n.classList.remove("activeNav"));
+el.classList.add("activeNav");
+}
+
+/* FILTER */
+function setFilter(f,el){
+filter=f;
+
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("activeTab"));
+el.classList.add("activeTab");
+
+render();
+}
+
+/* RENDER */
+function render(){
+let html="";
+let total=0;
+
+data.forEach((r,i)=>{
+if(filter!="all" && r.status!=filter) return;
+
+total+=r.price;
+
+let numClass="n"+((i%4)+1);
+
+html+=`
+<div class="card">
+<div class="left">
+<div class="num ${numClass}">${i+1}</div>
+
+<div class="avatar">
+<img src="https://cdn-icons-png.flaticon.com/512/616/616408.png">
+</div>
+
+<div>
+<b>${r.name}</b><br>
+<span class="status ${r.status}">
+${r.status=="wait"?"รอคิว":r.status=="doing"?"กำลังทำ":"เสร็จ"}
+</span>
+</div>
+</div>
+
+<div class="right">
+<div class="price">${r.price} บาท</div>
+<div style="font-size:11px;color:#aaa;">${r.qty} รูป</div>
+</div>
+</div>
+`;
+});
+
+list.innerHTML=html;
+noti.innerText=data.length;
+money.innerText=total+" บาท";
+}
+
+/* ADD */
+function add(){
+data.push({name:"ลูกค้าใหม่",qty:"8",price:150,status:"wait"});
+render();
+}
+
+render();
+</script>
+
+</body>
+</html>
+<!-- เพิ่ม CSS ด้านล่างของเดิม -->
+
+<style>
+
+/* TYPE COLOR */
+.type{
+font-size:11px;
+padding:3px 8px;
+border-radius:10px;
+display:inline-block;
+margin-top:2px;
+}
+.t1{background:#ffd9e7;color:#ff5f93}
+.t2{background:#d6ecff;color:#3498db}
+.t3{background:#ffe8c2;color:#ff9800}
+.t4{background:#e1d7ff;color:#6c5ce7}
+
+/* STATUS เพิ่ม */
+.s1{background:#ffd9e7;color:#ff5f93}      /* รอคิว */
+.s2{background:#ffe8c2;color:#ff9800}      /* กำลังทำ */
+.s3{background:#fff3cd;color:#b8860b}      /* ตัดแต่ง */
+.s4{background:#d6ecff;color:#3498db}      /* รออนุมัติ */
+.s5{background:#e1d7ff;color:#6c5ce7}      /* แก้ไข */
+.s6{background:#d6ffe5;color:#2ecc71}      /* ส่งแล้ว */
+
+/* BILL */
+.bill{
+padding:15px;
+margin:10px;
+border-radius:20px;
+background:#fffdf8;
+border:3px dashed #ffb6c1;
+font-family:'Kanit';
+}
+
+.copyBtn{
+background:#ff5f93;
+color:#fff;
+border:none;
+padding:8px;
+border-radius:10px;
+margin-top:10px;
+}
+
+</style>
+let data=[
+{
+name:"คุณมีนี่",
+qty:"16รูป",
+price:250,
+type:"สติกเกอร์รูปตัวเอง+แชท",
+typeClass:"t1",
+status:"รอคิว",
+statusClass:"s1"
+},
+{
+name:"คุณแพรวา",
+qty:"24รูป",
+price:450,
+type:"ตัดรูปโปร่งใส (ลูกค้า)",
+typeClass:"t2",
+status:"กำลังดำเนินงาน",
+statusClass:"s2"
+},
+{
+name:"คุณเฟิร์น",
+qty:"32รูป",
+price:600,
+type:"สติกเกอร์ไลน์แบบเซ็ต",
+typeClass:"t4",
+status:"ส่งงานเรียบร้อย",
+statusClass:"s6"
+}
+];function render(){
+let html="";
+let total=0;
+
+data.forEach((r,i)=>{
+
+total+=r.price;
+
+html+=`
+<div class="card">
+
+<div class="left">
+<div class="num n${(i%4)+1}">${i+1}</div>
+
+<div class="avatar">
+<img src="https://cdn-icons-png.flaticon.com/512/616/616430.png">
+</div>
+
+<div>
+<b>${r.name}</b><br>
+
+<div class="type ${r.typeClass}">${r.type}</div><br>
+
+<span class="status ${r.statusClass}">
+${r.status}
+</span>
+
+</div>
+</div>
+
+<div class="right">
+<div class="price">${r.price} บาท</div>
+<div style="font-size:11px;color:#aaa;">${r.qty}</div>
+
+<button onclick="bill(${i})">🧾</button>
+</div>
+
+</div>
+`;
+});
+
+list.innerHTML=html;
+money.innerText=total+" บาท";
+noti.innerText=data.length;
+}<div id="billPage" class="page">
+<div class="bill" id="billBox">
+
+<h2>🎀 Lana Store 🎀</h2>
+
+<p id="bName"></p>
+<p id="bType"></p>
+<p id="bQty"></p>
+<p id="bTotal"></p>
+
+<hr>
+
+<p>
+✿  ✿𓈒𝙷𝚘𝚠 𝚝𝚘𓈒𝚙𝚊𝚢𓈒🍮𓈒🍓𓈒<br>
+𓈒ชื่อบัญชีลารีนา พรมป้อง𓈒<br>
+𓈒🍀 TRUEWALLET 𓐄 0972962083<br>
+SCB 𓐄 9692138645 ⭐<br>
+𓈒🍅 PROMPTPAY 𓐄 0841169561
+</p>
+
+<button class="copyBtn" onclick="copyPay()">📋 คัดลอกเลขบัญชี</button>
+
+</div>
+</div>
+function bill(i){
+let r=data[i];
+
+bName.innerText="ลูกค้า: "+r.name;
+bType.innerText="งาน: "+r.type;
+bQty.innerText="จำนวน: "+r.qty;
+bTotal.innerText="รวม: "+r.price+" บาท";
+
+show("billPage");
+}
+
+function copyPay(){
+let text=`TRUEWALLET: 0972962083
+SCB: 9692138645
+PROMPTPAY: 0841169561`;
+
+navigator.clipboard.writeText(text);
+alert("คัดลอกแล้ว!");
+}
