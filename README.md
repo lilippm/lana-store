@@ -1,2 +1,0 @@
-# lana-store
-Lana store 
