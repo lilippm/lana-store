@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lana Store Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body{margin:0;font-family:'Kanit',sans-serif;background:#ffeaf2}
+
+/* PAGE */
+.page{display:none}
+.active{display:block}
+
+/* HEADER */
+.header{
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.title{font-weight:600;font-size:18px}
+
+/* CARD */
+.card{
+background:#fff;
+margin:10px;
+padding:15px;
+border-radius:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* BUTTON */
+.btn{
+width:100%;
+padding:12px;
+border:none;
+border-radius:15px;
+background:#ff5f93;
+color:#fff;
+margin-top:5px;
+}
+
+/* STATUS COLOR */
+.wait{background:#ffd9e7}
+.doing{background:#ffe8c2}
+.edit{background:#d6ffe5}
+.done{background:#d6ecff}
+
+/* TYPE COLOR */
+.type1{color:#ff4d88}
+.type2{color:#00b894}
+.type3{color:#6c5ce7}
+.type4{color:#e67e22}
+
+/* SEARCH */
+.search{
+width:90%;
+margin:10px;
+padding:10px;
+border-radius:15px;
+border:none;
+}
+
+/* NAV */
+.nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:#fff;
+display:flex;
+justify-content:space-around;
+padding:10px;
+}
+
+/* FAB */
+.fab{
+position:fixed;
+bottom:70px;
+left:50%;
+transform:translateX(-50%);
+width:60px;
+height:60px;
+border-radius:50%;
+background:#ff5f93;
+color:#fff;
+font-size:28px;
+border:none;
+}
+
+/* POPUP */
+.popup{
+position:fixed;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+display:none;
+justify-content:center;
+align-items:center;
+}
+.box{
+width:90%;
+background:#fff;
+padding:20px;
+border-radius:20px;
+}
+.input{
+width:100%;
+padding:10px;
+margin:5px 0;
+border-radius:10px;
+border:none;
+background:#f3f3f3;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HOME -->
+<div id="home" class="page active">
+
+<div class="header">
+<div class="title">🐰 Lana Store</div>
+<div onclick="alert('มีออเดอร์ใหม่!')">🔔 <span id="noti"></span></div>
+</div>
+
+<input class="search" placeholder="🔍 ค้นหาชื่อลูกค้า" oninput="search(this.value)">
+
+<div id="list"></div>
+
+</div>
+
+<!-- WALLET -->
+<div id="wallet" class="page">
+<div class="card">💰 รายได้รวม: <h2 id="money">0</h2></div>
+</div>
+
+<!-- DIARY -->
+<div id="diary" class="page">
+<div class="card">
+<textarea id="note"></textarea>
+<button class="btn" onclick="saveNote()">บันทึก</button>
+</div>
+<div id="notes"></div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+<div onclick="show('home')">🏠</div>
+<div onclick="show('wallet')">💰</div>
+<div onclick="show('diary')">📒</div>
+<div onclick="line()">💬</div>
+</div>
+
+<button class="fab" onclick="openPopup()">+</button>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+<div class="box">
+
+<input id="name" class="input" placeholder="ชื่อลูกค้า">
+
+<select id="type" class="input">
+<option value="type1">สติกเกอร์ message</option>
+<option value="type2">ตัดรูปโปร่งใส (ลูกค้า)</option>
+<option value="type3">ตัดรูปโปร่งใส (แม่ค้า)</option>
+<option value="type4">สติกเกอร์ไลน์</option>
+</select>
+
+<select id="qty" class="input">
+<option>8รูป</option>
+<option>16รูป</option>
+<option>24รูป</option>
+<option>32รูป</option>
+</select>
+
+<button class="btn" onclick="save()">บันทึก</button>
+
+</div>
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("data")||"[]");
+
+function show(p){
+document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));
+document.getElementById(p).classList.add("active");
+}
+
+function openPopup(){popup.style.display="flex"}
+
+function save(){
+let price = qty.value=="8รูป"?150:
+qty.value=="16รูป"?250:
+qty.value=="24รูป"?450:600;
+
+data.push({
+name:name.value,
+type:type.value,
+typeText:type.options[type.selectedIndex].text,
+qty:qty.value,
+price:price,
+status:"wait",
+statusText:"รอคิว"
+});
+
+localStorage.setItem("data",JSON.stringify(data));
+render();
+popup.style.display="none";
+}
+
+function render(listData=data){
+let html="";
+let money=0;
+
+listData.forEach((r,i)=>{
+money+=r.price;
+
+html+=`
+<div class="card ${r.status}">
+💖 ${r.name}<br>
+📌 <span class="${r.type}">${r.typeText}</span><br>
+📦 ${r.qty}<br>
+💰 ${r.price} บาท<br>
+🔢 คิว ${i+1}
+<button class="btn" onclick="bill(${i})">🧾 บิล</button>
+</div>`;
+});
+
+list.innerHTML=html;
+moneyEl.innerText=money;
+noti.innerText=data.length;
+}
+
+function search(q){
+render(data.filter(x=>x.name.includes(q)));
+}
+
+function bill(i){
+let r=data[i];
+
+let text=`ลูกค้า: ${r.name}
+รายการ: ${r.typeText}
+จำนวน: ${r.qty}
+ราคา: ${r.price} บาท
+
+TRUEWALLET: 0972962083`;
+
+navigator.clipboard.writeText(text);
+
+const { jsPDF } = window.jspdf;
+let doc = new jsPDF();
+doc.text(text,10,20);
+doc.save("bill.pdf");
+}
+
+function line(){
+window.open("https://line.me/R/ti/p/@fvd2237h");
+}
+
+function saveNote(){
+notes.innerHTML+=`<div class="card">${note.value}</div>`;
+}
+
+const list=document.getElementById("list");
+const moneyEl=document.getElementById("money");
+
+render();
+</script>
+
+</body>
+</html>
