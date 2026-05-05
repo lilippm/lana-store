@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lana Store FULL APP</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body{margin:0;font-family:'Kanit',sans-serif;background:#ffeaf2}
+
+/* PAGE */
+.page{display:none}
+.active{display:block}
+
+/* HEADER */
+.header{
+padding:15px;
+font-weight:600;
+display:flex;
+justify-content:space-between;
+}
+
+/* SEARCH */
+.search{
+width:90%;
+margin:10px;
+padding:10px;
+border-radius:15px;
+border:none;
+}
+
+/* CARD */
+.card{
+background:#fff;
+margin:10px;
+padding:15px;
+border-radius:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* BUTTON */
+.btn{
+width:100%;
+padding:12px;
+border:none;
+border-radius:15px;
+background:#ff5f93;
+color:#fff;
+margin-top:5px;
+}
+
+/* INPUT */
+.input{
+width:100%;
+padding:10px;
+margin:5px 0;
+border-radius:10px;
+border:none;
+background:#f3f3f3;
+}
+
+/* STATUS */
+.wait{background:#ffd9e7}
+.doing{background:#ffe8c2}
+.done{background:#d6ffe5}
+
+/* NAV */
+.nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:#fff;
+display:flex;
+justify-content:space-around;
+padding:10px;
+}
+
+/* FAB */
+.fab{
+position:fixed;
+bottom:70px;
+left:50%;
+transform:translateX(-50%);
+width:60px;
+height:60px;
+border-radius:50%;
+background:#ff5f93;
+color:#fff;
+font-size:28px;
+border:none;
+}
+
+/* DASH */
+.boxRow{
+display:flex;
+gap:10px;
+margin:10px;
+}
+.box{
+flex:1;
+background:#fff;
+padding:10px;
+border-radius:15px;
+text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 1. HOME -->
+<div id="home" class="page active">
+
+<div class="header">🐰 Lana Store 🔔 <span id="noti"></span></div>
+
+<input class="search" placeholder="🔍 ค้นหาลูกค้า" oninput="search(this.value)">
+
+<div id="list"></div>
+
+</div>
+
+<!-- 2. ADD -->
+<div id="addPage" class="page">
+
+<div class="header">เพิ่มคิวงานใหม่</div>
+
+<div class="card">
+<input id="name" class="input" placeholder="ชื่อลูกค้า">
+
+<select id="type" class="input">
+<option>สติกเกอร์ message</option>
+<option>ตัดรูปโปร่งใส (ลูกค้า)</option>
+<option>ตัดรูปโปร่งใส (แม่ค้า)</option>
+<option>สติกเกอร์ไลน์</option>
+</select>
+
+<select id="qty" class="input">
+<option>8</option>
+<option>16</option>
+<option>24</option>
+<option>32</option>
+</select>
+
+<button class="btn" onclick="save()">บันทึกคิวงาน</button>
+</div>
+
+</div>
+
+<!-- 3. WALLET -->
+<div id="wallet" class="page">
+
+<div class="card" style="background:#ff5f93;color:#fff">
+ยอดรวมทั้งหมด  
+<h2 id="money">0</h2>
+</div>
+
+<div class="boxRow">
+<div class="box">รอคิว<br><b id="w"></b></div>
+<div class="box">กำลังทำ<br><b id="d"></b></div>
+<div class="box">เสร็จ<br><b id="f"></b></div>
+</div>
+
+<div id="history"></div>
+
+</div>
+
+<!-- 4. NOTE -->
+<div id="notePage" class="page">
+
+<div class="card">
+<textarea id="note" class="input" placeholder="เขียนบันทึก..."></textarea>
+<button class="btn" onclick="saveNote()">บันทึก</button>
+</div>
+
+<div id="notes"></div>
+
+</div>
+
+<!-- 5. SETTINGS -->
+<div id="settings" class="page">
+
+<div class="card">
+ชื่อร้าน <input class="input" value="Lana Store">
+เบอร์ <input class="input" value="0972962083">
+Line <input class="input" value="@fvd2237h">
+</div>
+
+<div class="card">
+💰 การชำระเงิน <br><br>
+TrueWallet: 0972962083 <br>
+SCB: 9692138645 <br>
+PromptPay: 0841169561
+</div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+<div onclick="show('home')">🏠</div>
+<div onclick="show('wallet')">💰</div>
+<div onclick="show('addPage')">➕</div>
+<div onclick="show('notePage')">📒</div>
+<div onclick="show('settings')">⚙️</div>
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("data")||"[]");
+
+function show(p){
+document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));
+document.getElementById(p).classList.add("active");
+render();
+}
+
+function save(){
+let price = qty.value==8?150:
+qty.value==16?250:
+qty.value==24?450:600;
+
+data.push({
+name:name.value,
+type:type.value,
+qty:qty.value,
+price:price,
+status:"wait"
+});
+
+saveData();
+show("home");
+}
+
+function saveData(){
+localStorage.setItem("data",JSON.stringify(data));
+render();
+}
+
+function render(listData=data){
+let html="",money=0,w=0,d=0,f=0;
+
+listData.forEach((r,i)=>{
+money+=r.price;
+
+if(r.status=="wait") w++;
+if(r.status=="doing") d++;
+if(r.status=="done") f++;
+
+html+=`
+<div class="card ${r.status}">
+💖 ${r.name}<br>
+📌 ${r.type}<br>
+📦 ${r.qty} รูป<br>
+💰 ${r.price} บาท<br>
+
+<button onclick="next(${i})">➡️</button>
+<button onclick="del(${i})">🗑️</button>
+</div>
+`;
+});
+
+list.innerHTML=html;
+moneyEl.innerText=money;
+noti.innerText=data.length;
+document.getElementById("w").innerText=w;
+document.getElementById("d").innerText=d;
+document.getElementById("f").innerText=f;
+}
+
+function next(i){
+let s=data[i].status;
+data[i].status = s=="wait"?"doing":s=="doing"?"done":"wait";
+saveData();
+}
+
+function del(i){
+data.splice(i,1);
+saveData();
+}
+
+function search(q){
+render(data.filter(x=>x.name.includes(q)));
+}
+
+/* NOTE */
+function saveNote(){
+notes.innerHTML+=`<div class="card">${note.value}</div>`;
+}
+
+render();
+</script>
+
+</body>
+</html>
