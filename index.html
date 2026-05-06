@@ -1,0 +1,481 @@
+<!-- ใส่อันนี้แทน SCRIPT เดิมทั้งหมด -->
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script>
+
+/* TYPE */
+
+let types=[
+
+{
+txt:"สติกเกอร์รูปตัวเอง+แชท message",
+cls:"t1"
+},
+
+{
+txt:"ตัดรูปโปร่งใส (ลูกค้านำรูปมาเอง)",
+cls:"t2"
+},
+
+{
+txt:"ตัดรูปโปร่งใส (แม่ค้าสร้างให้)",
+cls:"t3"
+},
+
+{
+txt:"สติกเกอร์ไลน์แบบเซ็ต",
+cls:"t4"
+}
+
+];
+
+/* STATUS */
+
+let statusList=[
+
+{
+txt:"รอคิว",
+cls:"s1"
+},
+
+{
+txt:"กำลังดำเนินงาน",
+cls:"s2"
+},
+
+{
+txt:"ตัดแต่ง",
+cls:"s3"
+},
+
+{
+txt:"รอผลอนุมัติ",
+cls:"s4"
+},
+
+{
+txt:"แก้ไขงาน",
+cls:"s5"
+},
+
+{
+txt:"ส่งงานเรียบร้อย",
+cls:"s6"
+}
+
+];
+
+let data=JSON.parse(localStorage.getItem("lanaQueue")) || [];
+
+let filter="all";
+
+let selectedQty="8รูป";
+
+let basePrice=150;
+
+/* STORAGE */
+
+function saveStorage(){
+
+localStorage.setItem("lanaQueue",JSON.stringify(data));
+
+}
+
+/* PAGE */
+
+function show(page,el){
+
+document.querySelectorAll(".page").forEach(p=>{
+p.classList.remove("active");
+});
+
+document.getElementById(page).classList.add("active");
+
+document.querySelectorAll(".navItem").forEach(n=>{
+n.classList.remove("activeNav");
+});
+
+if(el){
+el.classList.add("activeNav");
+}
+
+}
+
+/* FILTER */
+
+function setFilter(f,el){
+
+filter=f;
+
+document.querySelectorAll(".tab").forEach(t=>{
+t.classList.remove("activeTab");
+});
+
+el.classList.add("activeTab");
+
+render();
+
+}
+
+/* FORM */
+
+function openForm(){
+
+document.getElementById("formBox").style.display="flex";
+
+}
+
+window.onclick=function(e){
+
+if(e.target.id=="formBox"){
+
+document.getElementById("formBox").style.display="none";
+
+}
+
+}
+
+/* QTY */
+
+function selectQty(el,qty,price){
+
+document.querySelectorAll(".qtyBtn").forEach(q=>{
+q.classList.remove("activeQty");
+});
+
+el.classList.add("activeQty");
+
+selectedQty=qty;
+
+basePrice=price;
+
+calculateTotal();
+
+}
+
+/* EXTRA */
+
+function changeExtra(id,num){
+
+let input=document.getElementById(id);
+
+let value=parseInt(input.value);
+
+value += num;
+
+if(value<0){
+value=0;
+}
+
+input.value=value;
+
+calculateTotal();
+
+}
+
+/* TOTAL */
+
+function calculateTotal(){
+
+let e5=parseInt(document.getElementById("e5").value)*5;
+
+let e10=parseInt(document.getElementById("e10").value)*10;
+
+let e20=parseInt(document.getElementById("e20").value)*20;
+
+document.getElementById("e5Total").innerText=e5+" ฿";
+
+document.getElementById("e10Total").innerText=e10+" ฿";
+
+document.getElementById("e20Total").innerText=e20+" ฿";
+
+let total=basePrice+e5+e10+e20;
+
+document.getElementById("grandTotal").innerText=total+" ฿";
+
+return total;
+
+}
+
+/* SAVE */
+
+function saveQueue(){
+
+let name=document.getElementById("customerName").value;
+
+if(name==""){
+alert("กรุณากรอกชื่อลูกค้า");
+return;
+}
+
+let type=types[document.getElementById("typeSelect").value];
+
+let status=statusList[document.getElementById("statusSelect").value];
+
+let e5=parseInt(document.getElementById("e5").value);
+
+let e10=parseInt(document.getElementById("e10").value);
+
+let e20=parseInt(document.getElementById("e20").value);
+
+let total=calculateTotal();
+
+data.push({
+
+name:name,
+type:type,
+status:status,
+qty:selectedQty,
+base:basePrice,
+
+e5:e5,
+e10:e10,
+e20:e20,
+
+price:total
+
+});
+
+saveStorage();
+
+render();
+
+document.getElementById("formBox").style.display="none";
+
+document.getElementById("customerName").value="";
+
+document.getElementById("e5").value=0;
+document.getElementById("e10").value=0;
+document.getElementById("e20").value=0;
+
+calculateTotal();
+
+}
+
+/* DELETE */
+
+function deleteQueue(i){
+
+if(confirm("ลบคิวนี้ ?")){
+
+data.splice(i,1);
+
+saveStorage();
+
+render();
+
+}
+
+}
+
+/* RENDER */
+
+function render(){
+
+let html="";
+
+let keyword=document.getElementById("searchInput").value.toLowerCase();
+
+data.forEach((r,i)=>{
+
+if(filter!="all" && r.status.cls!=filter){
+return;
+}
+
+if(!r.name.toLowerCase().includes(keyword)){
+return;
+}
+
+html += `
+
+<div class="card">
+
+<div class="left">
+
+<div class="num n${(i%4)+1}">
+${i+1}
+</div>
+
+<div class="avatar">
+<img src="https://cdn-icons-png.flaticon.com/512/616/616430.png">
+</div>
+
+<div>
+
+<div class="name">
+${r.name}
+</div>
+
+<div class="type ${r.type.cls}">
+${r.type.txt}
+</div>
+
+<br>
+
+<div class="status ${r.status.cls}">
+${r.status.txt}
+</div>
+
+<div class="qty">
+${r.qty}
+</div>
+
+</div>
+</div>
+
+<div class="right">
+
+<div class="price">
+${r.price}
+<span class="baht">฿</span>
+</div>
+
+<div class="actionBtns">
+
+<button class="billBtn" onclick="bill(${i})">
+🧾 บิล
+</button>
+
+<button class="delBtn" onclick="deleteQueue(${i})">
+🗑️
+</button>
+
+</div>
+</div>
+</div>
+
+`;
+
+});
+
+document.getElementById("list").innerHTML=html;
+
+document.getElementById("noti").innerText=data.length;
+
+}
+
+/* BILL */
+
+function bill(i){
+
+let r=data[i];
+
+document.getElementById("bName").innerText=r.name;
+document.getElementById("bType").innerText=r.type.txt;
+document.getElementById("bStatus").innerText=r.status.txt;
+document.getElementById("bQty").innerText=r.qty;
+document.getElementById("bBase").innerText=r.base+" บาท";
+
+document.getElementById("b5").innerText=r.e5;
+document.getElementById("b10").innerText=r.e10;
+document.getElementById("b20").innerText=r.e20;
+
+document.getElementById("b5total").innerText=r.e5*5;
+document.getElementById("b10total").innerText=r.e10*10;
+document.getElementById("b20total").innerText=r.e20*20;
+
+document.getElementById("bTotal").innerText=r.price+" บาท";
+
+show("billPage");
+
+}
+
+/* COPY */
+
+function copyPay(){
+
+let text=`
+TRUEWALLET : 0972962083
+SCB : 9692138645
+PROMPTPAY : 0841169561
+`;
+
+navigator.clipboard.writeText(text);
+
+alert("คัดลอกเลขบัญชีแล้ว 💖");
+
+}
+
+/* SAVE BILL IMAGE */
+
+async function shareBill(){
+
+const billElement=document.querySelector(".billWrap");
+
+try{
+
+const canvas=await html2canvas(billElement,{
+scale:2,
+useCORS:true,
+allowTaint:true,
+backgroundColor:"#fff5f8"
+});
+
+const image=canvas.toDataURL("image/png");
+
+/* เปิดรูปใหม่ */
+
+const newTab=window.open();
+
+newTab.document.write(`
+<html>
+<head>
+<title>Lana Bill</title>
+<style>
+body{
+margin:0;
+background:#000;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+img{
+width:100%;
+max-width:900px;
+}
+button{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+padding:14px 28px;
+border:none;
+border-radius:16px;
+background:#ff4f8c;
+color:#fff;
+font-size:18px;
+font-weight:700;
+}
+</style>
+</head>
+<body>
+
+<img src="${image}">
+
+<a href="${image}" download="LanaStore-Bill.png">
+<button>📥 กดเซฟรูปบิล</button>
+</a>
+
+</body>
+</html>
+`);
+
+}catch(err){
+
+alert("เกิดข้อผิดพลาดในการเซฟรูป");
+
+console.log(err);
+
+}
+
+}
+
+/* START */
+
+calculateTotal();
+
+render();
+
+  </script>
