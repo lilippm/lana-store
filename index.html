@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lana Store</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Kanit',sans-serif;
+}
+
+body{
+background:#fff5f8;
+padding-bottom:110px;
+color:#333;
+}
+
+/* PAGE */
+
+.page{
+display:none;
+}
+
+.active{
+display:block;
+}
+
+/* HEADER */
+
+.header{
+padding:18px 16px 10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.title{
+display:flex;
+align-items:center;
+gap:10px;
+font-size:22px;
+font-weight:700;
+}
+
+.logo{
+width:44px;
+height:44px;
+border-radius:50%;
+background:#ffe0ea;
+padding:4px;
+}
+
+.bell{
+position:relative;
+font-size:28px;
+}
+
+.badge{
+position:absolute;
+top:-4px;
+right:-8px;
+background:#ff235f;
+color:#fff;
+width:20px;
+height:20px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:10px;
+font-weight:700;
+}
+
+/* SEARCH */
+
+.searchWrap{
+padding:0 12px;
+}
+
+.search{
+background:#fff;
+border-radius:22px;
+padding:14px 16px;
+display:flex;
+align-items:center;
+gap:10px;
+box-shadow:0 5px 15px rgba(0,0,0,.05);
+}
+
+.search input{
+border:none;
+outline:none;
+background:none;
+width:100%;
+font-size:15px;
+}
+
+/* TABS */
+
+.tabs{
+display:flex;
+gap:8px;
+overflow:auto;
+padding:14px 12px;
+}
+
+.tabs::-webkit-scrollbar{
+display:none;
+}
+
+.tab{
+white-space:nowrap;
+padding:8px 14px;
+border-radius:16px;
+background:#fff;
+font-size:12px;
+font-weight:600;
+border:2px dashed #ffd0de;
+cursor:pointer;
+}
+
+.activeTab{
+background:#ff4f8c;
+color:#fff;
+border:none;
+}
+
+/* CARD */
+
+.card{
+background:#fff;
+margin:0 12px 12px;
+padding:14px;
+border-radius:24px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 6px 18px rgba(255,105,150,.08);
+}
+
+.left{
+display:flex;
+gap:12px;
+align-items:flex-start;
+}
+
+.num{
+width:28px;
+height:28px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-size:12px;
+font-weight:700;
+margin-top:8px;
+}
+
+.n1{background:#ff4f8c;}
+.n2{background:#ff9800;}
+.n3{background:#5b9dff;}
+.n4{background:#8b5cf6;}
+
+.avatar{
+width:56px;
+height:56px;
+border-radius:18px;
+background:#ffe6ef;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+}
+
+.avatar img{
+width:42px;
+}
+
+.name{
+font-size:18px;
+font-weight:700;
+margin-bottom:4px;
+}
+
+.type{
+display:inline-block;
+padding:4px 10px;
+border-radius:12px;
+font-size:11px;
+margin-bottom:5px;
+}
+
+.t1{
+background:#ffdbe8;
+color:#ff4f8c;
+}
+
+.t2{
+background:#dcecff;
+color:#4285f4;
+}
+
+.t3{
+background:#ffe9c6;
+color:#ff9800;
+}
+
+.t4{
+background:#eadcff;
+color:#8b5cf6;
+}
+
+.status{
+display:inline-block;
+padding:5px 10px;
+border-radius:12px;
+font-size:11px;
+font-weight:600;
+margin-right:5px;
+}
+
+.s1{
+background:#ffdbe8;
+color:#ff4f8c;
+}
+
+.s2{
+background:#ffe8bf;
+color:#ff9800;
+}
+
+.s3{
+background:#fff3c6;
+color:#a17800;
+}
+
+.s4{
+background:#dcecff;
+color:#3498db;
+}
+
+.s5{
+background:#eadcff;
+color:#7d4dff;
+}
+
+.s6{
+background:#d9ffe8;
+color:#11a95c;
+}
+
+.qty{
+display:inline-block;
+padding:5px 10px;
+border-radius:12px;
+background:#f2f2f2;
+font-size:11px;
+}
+
+.right{
+text-align:right;
+}
+
+.price{
+font-size:30px;
+font-weight:700;
+color:#ff4f8c;
+line-height:1;
+}
+
+.baht{
+font-size:18px;
+}
+
+.actionBtns{
+display:flex;
+gap:6px;
+justify-content:flex-end;
+margin-top:8px;
+}
+
+.billBtn{
+border:none;
+background:#fff;
+border:2px solid #ffb6cb;
+padding:7px 12px;
+border-radius:12px;
+font-size:13px;
+font-weight:700;
+color:#ff4f8c;
+cursor:pointer;
+}
+
+.delBtn{
+border:none;
+background:#ffebf1;
+padding:7px 10px;
+border-radius:12px;
+cursor:pointer;
+}
+
+/* NAV */
+
+.nav{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#fff;
+display:flex;
+justify-content:space-around;
+padding:14px 0;
+border-top-left-radius:24px;
+border-top-right-radius:24px;
+box-shadow:0 -5px 20px rgba(0,0,0,.08);
+z-index:20;
+}
+
+.navItem{
+text-align:center;
+font-size:12px;
+color:#999;
+cursor:pointer;
+}
+
+.activeNav{
+color:#ff4f8c;
+font-weight:700;
+}
+
+/* FAB */
+
+.fab{
+position:fixed;
+bottom:78px;
+left:50%;
+transform:translateX(-50%);
+width:70px;
+height:70px;
+border:none;
+border-radius:50%;
+background:#ff4f8c;
+color:#fff;
+font-size:40px;
+box-shadow:0 10px 25px rgba(255,79,140,.4);
+cursor:pointer;
+z-index:20;
+}
+
+/* FORM */
+
+#formBox{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+display:none;
+align-items:center;
+justify-content:center;
+padding:15px;
+z-index:100;
+}
+
+.formCard{
+background:#fff;
+width:100%;
+max-width:420px;
+border-radius:30px;
+padding:20px;
+max-height:95vh;
+overflow:auto;
+}
+
+.formTitle{
+text-align:center;
+font-size:30px;
+font-weight:700;
+color:#ff4f8c;
+margin-bottom:18px;
+}
+
+.label{
+margin-bottom:8px;
+font-size:15px;
+font-weight:700;
+}
+
+.input{
+width:100%;
+padding:14px;
+border-radius:16px;
+border:2px solid #f0f0f0;
+margin-bottom:14px;
+font-size:15px;
+outline:none;
+}
+
+.pink{
+background:#fff0f5;
+}
+
+.orange{
+background:#fff5e7;
+}
+
+.qtyGrid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-bottom:15px;
+}
+
+.qtyBtn{
+border:2px solid #ececec;
+border-radius:16px;
+padding:10px 5px;
+background:#fff;
+cursor:pointer;
+text-align:center;
+}
+
+.activeQty{
+border-color:#ff4f8c;
+background:#fff2f7;
+}
+
+.qtyBtn b{
+display:block;
+font-size:20px;
+}
+
+.qtyBtn span{
+font-size:14px;
+color:#555;
+}
+
+.extraRow{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:12px;
+gap:10px;
+}
+
+.counter{
+display:flex;
+align-items:center;
+}
+
+.counter button{
+width:36px;
+height:36px;
+border:none;
+background:#ececec;
+font-size:22px;
+cursor:pointer;
+}
+
+.counter input{
+width:45px;
+height:36px;
+border:none;
+text-align:center;
+font-size:18px;
+background:#f7f7f7;
+}
+
+.extraPrice{
+color:#ff4f8c;
+font-size:20px;
+font-weight:700;
+min-width:70px;
+text-align:right;
+}
+
+.totalBox{
+text-align:right;
+font-size:34px;
+font-weight:700;
+color:#ff4f8c;
+margin:15px 0;
+}
+
+.saveBtn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:18px;
+background:#ff4f8c;
+color:#fff;
+font-size:20px;
+font-weight:700;
+cursor:pointer;
+}
+
+/* BILL */
+
+.billPage{
+padding:14px;
+background:#fff5f8;
+min-height:100vh;
+}
+
+.billTop{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.billTitle{
+font-size:24px;
+font-weight:700;
+}
+
+.billWrap{
+background:#fffefc;
+border:4px dashed #ffc5d8;
+border-radius:28px;
+padding:18px;
+position:relative;
+}
+
+.billLogo{
+font-size:50px;
+position:absolute;
+right:15px;
+top:10px;
+}
+
+.billStore{
+font-size:44px;
+font-weight:700;
+color:#ff4f8c;
+margin-bottom:18px;
+}
+
+.billGrid{
+display:grid;
+grid-template-columns:1.2fr .8fr;
+gap:15px;
+}
+
+.billLeft{
+font-size:18px;
+line-height:2;
+}
+
+.billLeft b{
+display:inline-block;
+width:120px;
+}
+
+.extraBox{
+margin-top:18px;
+border:3px dashed #ffc5d8;
+padding:15px;
+border-radius:18px;
+}
+
+.extraTitle{
+font-size:22px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+.extraRowBill{
+display:flex;
+justify-content:space-between;
+font-size:18px;
+margin-bottom:8px;
+}
+
+.payBox{
+border:3px solid #ffd9e7;
+border-radius:22px;
+padding:18px;
+background:#fff;
+}
+
+.payTitle{
+font-size:22px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.payText{
+line-height:2;
+font-size:17px;
+}
+
+.payPink{
+color:#ff4f8c;
+font-weight:700;
+font-size:20px;
+margin:10px 0;
+}
+
+.totalText{
+margin-top:18px;
+font-size:26px;
+font-weight:700;
+}
+
+.totalPrice{
+font-size:55px;
+font-weight:700;
+color:#ff4f8c;
+}
+
+.billButtons{
+display:flex;
+gap:12px;
+margin-top:20px;
+}
+
+.billButtons button{
+flex:1;
+height:60px;
+border-radius:18px;
+border:2px solid #ffb6cb;
+background:#fff;
+font-size:22px;
+font-weight:700;
+color:#ff4f8c;
+}
+
+@media(max-width:700px){
+
+.billGrid{
+grid-template-columns:1fr;
+}
+
+.billStore{
+font-size:34px;
+}
+
+.totalPrice{
+font-size:45px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HOME -->
+
+<div id="home" class="page active">
+
+<div class="header">
+
+<div class="title">
+<img class="logo" src="https://cdn-icons-png.flaticon.com/512/616/616430.png">
+Lana Store
+</div>
+
+<div class="bell">
+🔔
+<div class="badge" id="noti">0</div>
+</div>
+
+</div>
+
+<div class="searchWrap">
+
+<div class="search">
+🔍
+<input id="searchInput" placeholder="ค้นหาชื่อลูกค้า" onkeyup="render()">
+</div>
+
+</div>
+
+<div class="tabs">
+
+<div class="tab activeTab" onclick="setFilter('all',this)">ทั้งหมด</div>
+
+<div class="tab" onclick="setFilter('s1',this)">รอคิว</div>
+
+<div class="tab" onclick="setFilter('s2',this)">กำลังดำเนินงาน</div>
+
+<div class="tab" onclick="setFilter('s3',this)">ตัดแต่ง</div>
+
+<div class="tab" onclick="setFilter('s4',this)">รอผลอนุมัติ</div>
+
+<div class="tab" onclick="setFilter('s5',this)">แก้ไขงาน</div>
+
+<div class="tab" onclick="setFilter('s6',this)">ส่งงานเรียบร้อย</div>
+
+</div>
+
+<div id="list"></div>
+
+</div>
+
+<!-- BILL -->
+
+<div id="billPage" class="page">
+
+<div class="billPage">
+
+<div class="billTop">
+
+<div style="font-size:35px;cursor:pointer;" onclick="show('home')">
+←
+</div>
+
+<div class="billTitle">
+บิลคิวงาน
+</div>
+
+<div style="font-size:42px;">
+🐱
+</div>
+
+</div>
+
+<div class="billWrap">
+
+<div class="billLogo">
+✨
+</div>
+
+<div class="billStore">
+🎀 Lana Store 🎀
+</div>
+
+<div class="billGrid">
+
+<!-- LEFT -->
+
+<div>
+
+<div class="billLeft">
+
+<div>
+<b>ลูกค้า :</b>
+<span id="bName"></span>
+</div>
+
+<div>
+<b>ประเภทงาน :</b>
+<span id="bType"></span>
+</div>
+
+<div>
+<b>สถานะ :</b>
+<span id="bStatus"></span>
+</div>
+
+<div>
+<b>จำนวนรูป :</b>
+<span id="bQty"></span>
+</div>
+
+<div>
+<b>ราคาฐาน :</b>
+<span id="bBase"></span>
+</div>
+
+</div>
+
+<div class="extraBox">
+
+<div class="extraTitle">
+ราคาแยกรูปเพิ่มเติม
+</div>
+
+<div class="extraRowBill">
+<div>5 บาท/รูป × <span id="b5"></span></div>
+<div><span id="b5total"></span> บาท</div>
+</div>
+
+<div class="extraRowBill">
+<div>10 บาท/รูป × <span id="b10"></span></div>
+<div><span id="b10total"></span> บาท</div>
+</div>
+
+<div class="extraRowBill">
+<div>20 บาท/รูป × <span id="b20"></span></div>
+<div><span id="b20total"></span> บาท</div>
+</div>
+
+</div>
+
+<div class="totalText">
+รวมทั้งหมด
+</div>
+
+<div class="totalPrice" id="bTotal">
+0 บาท
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="payBox">
+
+<div class="payTitle">
+🐱 How to pay
+</div>
+
+<div class="payText">
+
+✿ ✿𓈒𝙷𝚘𝚠 𝚝𝚘𓈒𝚙𝚊𝚢𓈒🍮𓈒🍓𓈒 <br>
+
+𓈒ชื่อบัญชีลารีนา พรมป้อง𓈒 <br><br>
+
+𓈒🍀ᴛʀᴜᴇᴡᴀʟʟᴇᴛ 𓐄 0972962083 <br>
+
+ꜱᴄʙ 𓐄 9692138645 𓈒⭐ <br>
+
+𓈒🍅 ᴘʀᴏᴍᴘᴛᴘᴀʏ 𓐄 0841169561
+
+<div class="payPink">
+โอนวอ ไม่บวกเพิ่ม
+</div>
+
+꒰𓈒♡݁𓈒รบกวนแจ้งสลีป+ไอดี<br>
+หรือคิวอาร์โค้ดทุกครั้งด้วยนะงับ 𓈒🌸𓈒꒱
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="billButtons">
+
+<button onclick="copyPay()">
+📋 คัดลอกเลขบัญชี
+</button>
+
+<button onclick="shareBill()">
+🔗 แชร์บิล
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FORM -->
+
+<div id="formBox">
+
+<div class="formCard">
+
+<div class="formTitle">
+🎀 เพิ่มคิวงานใหม่ 🎀
+</div>
+
+<div class="label">
+ชื่อลูกค้า
+</div>
+
+<input id="customerName" class="input" placeholder="กรอกชื่อลูกค้า">
+
+<div class="label">
+ประเภทงาน
+</div>
+
+<select id="typeSelect" class="input pink">
+
+<option value="0">💖 สติกเกอร์รูปตัวเอง+แชท message</option>
+
+<option value="1">💙 ตัดรูปโปร่งใส (ลูกค้านำรูปมาเอง)</option>
+
+<option value="2">💛 ตัดรูปโปร่งใส (แม่ค้าสร้างให้)</option>
+
+<option value="3">💜 สติกเกอร์ไลน์แบบเซ็ต</option>
+
+</select>
+
+<div class="label">
+สถานะ
+</div>
+
+<select id="statusSelect" class="input orange">
+
+<option value="0">💗 รอคิว</option>
+
+<option value="1">🧡 กำลังดำเนินงาน</option>
+
+<option value="2">💛 ตัดแต่ง</option>
+
+<option value="3">💙 รอผลอนุมัติ</option>
+
+<option value="4">💜 แก้ไขงาน</option>
+
+<option value="5">💚 ส่งงานเรียบร้อย</option>
+
+</select>
+
+<div class="label">
+จำนวนรูป (คิดอัตโนมัติ)
+</div>
+
+<div class="qtyGrid">
+
+<div class="qtyBtn activeQty" onclick="selectQty(this,'8รูป',150)">
+<b>8รูป</b>
+<span>150 ฿</span>
+</div>
+
+<div class="qtyBtn" onclick="selectQty(this,'16รูป',250)">
+<b>16รูป</b>
+<span>250 ฿</span>
+</div>
+
+<div class="qtyBtn" onclick="selectQty(this,'24รูป',450)">
+<b>24รูป</b>
+<span>450 ฿</span>
+</div>
+
+<div class="qtyBtn" onclick="selectQty(this,'32รูป',600)">
+<b>32รูป</b>
+<span>600 ฿</span>
+</div>
+
+</div>
+
+<div class="label">
+ราคาแยกรูปเพิ่มเติม
+</div>
+
+<div class="extraRow">
+
+<div>5 บาท/รูป</div>
+
+<div class="counter">
+<button onclick="changeExtra('e5',-1)">-</button>
+<input id="e5" value="0" readonly>
+<button onclick="changeExtra('e5',1)">+</button>
+</div>
+
+<div class="extraPrice" id="e5Total">
+0 ฿
+</div>
+
+</div>
+
+<div class="extraRow">
+
+<div>10 บาท/รูป</div>
+
+<div class="counter">
+<button onclick="changeExtra('e10',-1)">-</button>
+<input id="e10" value="0" readonly>
+<button onclick="changeExtra('e10',1)">+</button>
+</div>
+
+<div class="extraPrice" id="e10Total">
+0 ฿
+</div>
+
+</div>
+
+<div class="extraRow">
+
+<div>20 บาท/รูป</div>
+
+<div class="counter">
+<button onclick="changeExtra('e20',-1)">-</button>
+<input id="e20" value="0" readonly>
+<button onclick="changeExtra('e20',1)">+</button>
+</div>
+
+<div class="extraPrice" id="e20Total">
+0 ฿
+</div>
+
+</div>
+
+<div class="totalBox" id="grandTotal">
+150 ฿
+</div>
+
+<button class="saveBtn" onclick="saveQueue()">
+บันทึกคิวงาน 💖
+</button>
+
+</div>
+
+</div>
+
+<!-- NAV -->
+
+<div class="nav">
+
+<div class="navItem activeNav" onclick="show('home',this)">
+🏠<br>
+หน้าหลัก
+</div>
+
+<div class="navItem" onclick="show('billPage',this)">
+🧾<br>
+บิล
+</div>
+
+</div>
+
+<button class="fab" onclick="openForm()">
++
+</button>
+
+<script>
+
+/* TYPE */
+
+let types=[
+
+{
+txt:"สติกเกอร์รูปตัวเอง+แชท message",
+cls:"t1"
+},
+
+{
+txt:"ตัดรูปโปร่งใส (ลูกค้านำรูปมาเอง)",
+cls:"t2"
+},
+
+{
+txt:"ตัดรูปโปร่งใส (แม่ค้าสร้างให้)",
+cls:"t3"
+},
+
+{
+txt:"สติกเกอร์ไลน์แบบเซ็ต",
+cls:"t4"
+}
+
+];
+
+/* STATUS */
+
+let statusList=[
+
+{
+txt:"รอคิว",
+cls:"s1"
+},
+
+{
+txt:"กำลังดำเนินงาน",
+cls:"s2"
+},
+
+{
+txt:"ตัดแต่ง",
+cls:"s3"
+},
+
+{
+txt:"รอผลอนุมัติ",
+cls:"s4"
+},
+
+{
+txt:"แก้ไขงาน",
+cls:"s5"
+},
+
+{
+txt:"ส่งงานเรียบร้อย",
+cls:"s6"
+}
+
+];
+
+/* STORAGE */
+
+let data=JSON.parse(localStorage.getItem("lanaQueue")) || [];
+
+let filter="all";
+
+let selectedQty="8รูป";
+
+let basePrice=150;
+
+/* SAVE STORAGE */
+
+function saveStorage(){
+localStorage.setItem("lanaQueue",JSON.stringify(data));
+}
+
+/* PAGE */
+
+function show(page,el){
+
+document.querySelectorAll(".page").forEach(p=>{
+p.classList.remove("active");
+});
+
+document.getElementById(page).classList.add("active");
+
+document.querySelectorAll(".navItem").forEach(n=>{
+n.classList.remove("activeNav");
+});
+
+if(el){
+el.classList.add("activeNav");
+}
+
+}
+
+/* FILTER */
+
+function setFilter(f,el){
+
+filter=f;
+
+document.querySelectorAll(".tab").forEach(t=>{
+t.classList.remove("activeTab");
+});
+
+el.classList.add("activeTab");
+
+render();
+
+}
+
+/* OPEN FORM */
+
+function openForm(){
+formBox.style.display="flex";
+}
+
+/* CLOSE FORM */
+
+window.onclick=function(e){
+
+if(e.target.id=="formBox"){
+formBox.style.display="none";
+}
+
+}
+
+/* SELECT QTY */
+
+function selectQty(el,qty,price){
+
+document.querySelectorAll(".qtyBtn").forEach(q=>{
+q.classList.remove("activeQty");
+});
+
+el.classList.add("activeQty");
+
+selectedQty=qty;
+
+basePrice=price;
+
+calculateTotal();
+
+}
+
+/* EXTRA */
+
+function changeExtra(id,num){
+
+let input=document.getElementById(id);
+
+let value=parseInt(input.value);
+
+value += num;
+
+if(value<0){
+value=0;
+}
+
+input.value=value;
+
+calculateTotal();
+
+}
+
+/* TOTAL */
+
+function calculateTotal(){
+
+let e5=parseInt(document.getElementById("e5").value)*5;
+
+let e10=parseInt(document.getElementById("e10").value)*10;
+
+let e20=parseInt(document.getElementById("e20").value)*20;
+
+document.getElementById("e5Total").innerText=e5+" ฿";
+
+document.getElementById("e10Total").innerText=e10+" ฿";
+
+document.getElementById("e20Total").innerText=e20+" ฿";
+
+let total=basePrice+e5+e10+e20;
+
+document.getElementById("grandTotal").innerText=total+" ฿";
+
+return total;
+
+}
+
+/* SAVE */
+
+function saveQueue(){
+
+let name=document.getElementById("customerName").value;
+
+if(name==""){
+alert("กรุณากรอกชื่อลูกค้า");
+return;
+}
+
+let type=types[typeSelect.value];
+
+let status=statusList[statusSelect.value];
+
+let e5=parseInt(document.getElementById("e5").value);
+
+let e10=parseInt(document.getElementById("e10").value);
+
+let e20=parseInt(document.getElementById("e20").value);
+
+let total=calculateTotal();
+
+data.push({
+
+name:name,
+type:type,
+status:status,
+qty:selectedQty,
+base:basePrice,
+
+e5:e5,
+e10:e10,
+e20:e20,
+
+price:total
+
+});
+
+saveStorage();
+
+render();
+
+formBox.style.display="none";
+
+/* RESET */
+
+customerName.value="";
+
+document.getElementById("e5").value=0;
+document.getElementById("e10").value=0;
+document.getElementById("e20").value=0;
+
+calculateTotal();
+
+}
+
+/* DELETE */
+
+function deleteQueue(i){
+
+if(confirm("ลบคิวนี้ ?")){
+
+data.splice(i,1);
+
+saveStorage();
+
+render();
+
+}
+
+}
+
+/* RENDER */
+
+function render(){
+
+let html="";
+
+let keyword=document.getElementById("searchInput").value.toLowerCase();
+
+data.forEach((r,i)=>{
+
+if(filter!="all" && r.status.cls!=filter){
+return;
+}
+
+if(!r.name.toLowerCase().includes(keyword)){
+return;
+}
+
+html += `
+
+<div class="card">
+
+<div class="left">
+
+<div class="num n${(i%4)+1}">
+${i+1}
+</div>
+
+<div class="avatar">
+<img src="https://cdn-icons-png.flaticon.com/512/616/616430.png">
+</div>
+
+<div>
+
+<div class="name">
+${r.name}
+</div>
+
+<div class="type ${r.type.cls}">
+${r.type.txt}
+</div>
+
+<br>
+
+<div class="status ${r.status.cls}">
+${r.status.txt}
+</div>
+
+<div class="qty">
+${r.qty}
+</div>
+
+</div>
+
+</div>
+
+<div class="right">
+
+<div class="price">
+${r.price}
+<span class="baht">฿</span>
+</div>
+
+<div class="actionBtns">
+
+<button class="billBtn" onclick="bill(${i})">
+🧾 บิล
+</button>
+
+<button class="delBtn" onclick="deleteQueue(${i})">
+🗑️
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+list.innerHTML=html;
+
+noti.innerText=data.length;
+
+}
+
+/* BILL */
+
+function bill(i){
+
+let r=data[i];
+
+document.getElementById("bName").innerText=r.name;
+
+document.getElementById("bType").innerText=r.type.txt;
+
+document.getElementById("bStatus").innerText=r.status.txt;
+
+document.getElementById("bQty").innerText=r.qty;
+
+document.getElementById("bBase").innerText=r.base+" บาท";
+
+document.getElementById("b5").innerText=r.e5;
+
+document.getElementById("b10").innerText=r.e10;
+
+document.getElementById("b20").innerText=r.e20;
+
+document.getElementById("b5total").innerText=r.e5*5;
+
+document.getElementById("b10total").innerText=r.e10*10;
+
+document.getElementById("b20total").innerText=r.e20*20;
+
+document.getElementById("bTotal").innerText=r.price+" บาท";
+
+show("billPage");
+
+}
+
+/* COPY */
+
+function copyPay(){
+
+navigator.clipboard.writeText(
+
+`TRUEWALLET : 0972962083
+SCB : 9692138645
+PROMPTPAY : 0841169561`
+
+);
+
+alert("คัดลอกเลขบัญชีแล้ว 💖");
+
+}
+
+/* SHARE */
+
+function shareBill(){
+
+alert("แชร์บิลได้เลย 💖");
+
+}
+
+/* START */
+
+calculateTotal();
+
+render();
+
+</script>
+<!-- เพิ่มไว้ก่อน </body> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+
+/* เพิ่มท้าย CSS เดิม */
+
+#billCapture{
+overflow:hidden;
+position:relative;
+}
+
+#billCapture::before{
+content:"";
+position:absolute;
+inset:0;
+pointer-events:none;
+background:
+radial-gradient(circle at top left,#ffd6e5 2px,transparent 2px),
+radial-gradient(circle at bottom right,#ffd6e5 2px,transparent 2px);
+background-size:80px 80px;
+opacity:.35;
+}
+
+</style>
+
+<script>
+
+/* ===========================
+   แก้ DIV billWrap เดิม
+   จาก:
+   <div class="billWrap">
+
+   เป็น:
+   <div class="billWrap" id="billCapture">
+=========================== */
+
+
+/* ===========================
+   SHARE BILL IMAGE
+=========================== */
+
+async function shareBill(){
+
+const bill = document.getElementById("billCapture");
+
+/* โหลดภาพ */
+
+const canvas = await html2canvas(bill,{
+
+scale:3,
+useCORS:true,
+backgroundColor:"#fff5f8"
+
+});
+
+/* แปลงเป็น PNG */
+
+const image = canvas.toDataURL("image/png");
+
+/* ดาวน์โหลดอัตโนมัติ */
+
+const link = document.createElement("a");
+
+link.href = image;
+
+link.download = "lana-store-bill.png";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+/* แชร์มือถือ */
+
+if(navigator.share){
+
+canvas.toBlob(async(blob)=>{
+
+const file = new File(
+[blob],
+"lana-store-bill.png",
+{
+type:"image/png"
+}
+);
+
+try{
+
+await navigator.share({
+
+files:[file],
+title:"Lana Store Bill"
+
+});
+
+}catch(err){}
+
+});
+
+}
+
+alert("บันทึกรูปบิลแล้ว 💖");
+
+}
+
+</script>
+</body>
+</html>
