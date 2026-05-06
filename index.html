@@ -1,0 +1,376 @@
+/* ===========================
+เพิ่มแทน SCRIPT เดิมทั้งหมด
+=========================== */
+
+// โหลดข้อมูลค้างไว้
+let data = JSON.parse(localStorage.getItem("lanaQueue")) || [];
+
+let filter = "all";
+
+const qtyPrice = {
+"8รูป":150,
+"16รูป":250,
+"24รูป":450,
+"32รูป":600,
+"1-5รูป":0,
+"10-20รูป":0,
+"30-40รูป":0,
+"50รูปขึ้นไป":0
+};
+
+let types=[
+{
+txt:"สติกเกอร์รูปตัวเอง+แชท message",
+cls:"t1"
+},
+{
+txt:"ตัดรูปโปร่งใส (ลูกค้านำรูปมาเอง)",
+cls:"t2"
+},
+{
+txt:"ตัดรูปโปร่งใส (แม่ค้าสร้างให้)",
+cls:"t3"
+},
+{
+txt:"สติกเกอร์ไลน์แบบเซ็ต",
+cls:"t4"
+}
+];
+
+let statusList=[
+{
+txt:"รอคิว",
+cls:"s1"
+},
+{
+txt:"กำลังดำเนินงาน",
+cls:"s2"
+},
+{
+txt:"ตัดแต่ง",
+cls:"s3"
+},
+{
+txt:"รอผลอนุมัติ",
+cls:"s4"
+},
+{
+txt:"แก้ไขงาน",
+cls:"s5"
+},
+{
+txt:"ส่งงานเรียบร้อย",
+cls:"s6"
+}
+];
+
+/* ===========================
+เปลี่ยน TAB เดิม เป็นนี้
+=========================== */
+
+document.querySelector(".tabs").innerHTML=`
+
+<div class="tab activeTab" onclick="setFilter('all',this)">ทั้งหมด</div>
+<div class="tab" onclick="setFilter('s1',this)">รอคิว</div>
+<div class="tab" onclick="setFilter('s2',this)">กำลังดำเนินงาน</div>
+<div class="tab" onclick="setFilter('s3',this)">ตัดแต่ง</div>
+<div class="tab" onclick="setFilter('s4',this)">รอผลอนุมัติ</div>
+<div class="tab" onclick="setFilter('s5',this)">แก้ไขงาน</div>
+<div class="tab" onclick="setFilter('s6',this)">ส่งงานเรียบร้อย</div>
+`;/* ===========================
+เพิ่ม HTML นี้
+วางก่อนปุ่ม บันทึกคิว
+=========================== */
+
+document.querySelector(".saveBtn").insertAdjacentHTML("beforebegin",`
+
+<div style="background:#fff7fb;padding:15px;border-radius:20px;margin-bottom:15px;"><div style="font-weight:600;margin-bottom:10px;color:#ff5f93;">
+💰 ราคาพิเศษเพิ่ม
+</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+<div>5 บาท/รูป</div><div style="display:flex;align-items:center;gap:10px;">
+<button onclick="minus('five')" type="button">-</button>
+<span id="fiveQty">0</span>
+<button onclick="plus('five')" type="button">+</button>
+</div><div id="fiveTotal">0฿</div>
+</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+<div>10 บาท/รูป</div><div style="display:flex;align-items:center;gap:10px;">
+<button onclick="minus('ten')" type="button">-</button>
+<span id="tenQty">0</span>
+<button onclick="plus('ten')" type="button">+</button>
+</div><div id="tenTotal">0฿</div>
+</div><div style="display:flex;justify-content:space-between;align-items:center;">
+<div>20 บาท/รูป</div><div style="display:flex;align-items:center;gap:10px;">
+<button onclick="minus('twenty')" type="button">-</button>
+<span id="twentyQty">0</span>
+<button onclick="plus('twenty')" type="button">+</button>
+</div><div id="twentyTotal">0฿</div>
+</div></div><div style="
+background:#ffe0ec;
+padding:15px;
+border-radius:20px;
+text-align:center;
+margin-bottom:15px;
+">
+<div style="color:#ff5f93;font-size:14px;">
+รวมทั้งหมด
+</div><div id="autoTotal"
+style="
+font-size:35px;
+font-weight:700;
+color:#ff5f93;
+">
+0 บาท
+</div>
+</div>`);
+
+/* ===========================
+ตัวแปรเสริม
+=========================== */
+
+let extra={
+five:0,
+ten:0,
+twenty:0
+};
+
+/* ===========================
+PLUS MINUS
+=========================== */
+
+function plus(type){
+extra[type]++;
+updateExtra();
+}
+
+function minus(type){
+if(extra[type]>0){
+extra[type]--;
+}
+updateExtra();
+}
+
+/* ===========================
+คำนวณรวมอัตโนมัติ
+=========================== */
+
+function updateExtra(){
+
+fiveQty.innerText=extra.five;
+tenQty.innerText=extra.ten;
+twentyQty.innerText=extra.twenty;
+
+fiveTotal.innerText=(extra.five5)+"฿";
+tenTotal.innerText=(extra.ten10)+"฿";
+twentyTotal.innerText=(extra.twenty*20)+"฿";
+
+let base = qtyPrice[qtySelect.value] || 0;
+
+let extraTotal=
+(extra.five5)+
+(extra.ten10)+
+(extra.twenty*20);
+
+autoTotal.innerText=(base+extraTotal)+" บาท";
+
+priceInput.value=(base+extraTotal);
+}
+
+/* ===========================
+เลือกจำนวน = คิดเงิน
+=========================== */
+
+qtySelect.onchange=updateExtra;
+
+/* ===========================
+PAGE
+=========================== */
+
+function show(p,el){
+
+document.querySelectorAll(".page").forEach(e=>{
+e.classList.remove("active");
+});
+
+document.getElementById(p).classList.add("active");
+
+document.querySelectorAll(".navItem").forEach(n=>{
+n.classList.remove("activeNav");
+});
+
+if(el){
+el.classList.add("activeNav");
+}
+}
+
+/* ===========================
+FILTER
+=========================== */
+
+function setFilter(f,el){
+
+filter=f;
+
+document.querySelectorAll(".tab").forEach(t=>{
+t.classList.remove("activeTab");
+});
+
+el.classList.add("activeTab");
+
+render();
+}
+
+/* ===========================
+เปิด FORM
+=========================== */
+
+function openForm(){
+
+document.getElementById("formBox").style.display="flex";
+}
+
+/* ===========================
+SAVE
+=========================== */
+
+function saveQueue(){
+
+let t=types[typeSelect.value];
+let s=statusList[statusSelect.value];
+
+data.push({
+name:customerName.value,
+type:t,
+status:s,
+qty:qtySelect.value,
+price:priceInput.value
+});
+
+localStorage.setItem("lanaQueue",JSON.stringify(data));
+
+document.getElementById("formBox").style.display="none";
+
+customerName.value="";
+priceInput.value="";
+
+extra={
+five:0,
+ten:0,
+twenty:0
+};
+
+updateExtra();
+
+render();
+}
+
+/* ===========================
+DELETE
+=========================== */
+
+function del(i){
+
+if(confirm("ลบคิวนี้ ?")){
+
+data.splice(i,1);
+
+localStorage.setItem("lanaQueue",JSON.stringify(data));
+
+render();
+
+}
+}
+
+/* ===========================
+RENDER
+=========================== */
+
+function render(){
+
+let html="";
+
+data.forEach((r,i)=>{
+
+if(filter!="all" && r.status.cls!=filter) return;
+
+html+=`
+
+<div class="card"><div class="left"><div class="num n${(i%4)+1}">
+${i+1}
+</div><div class="avatar">
+<img src="https://cdn-icons-png.flaticon.com/512/616/616430.png">
+</div><div><b>${r.name}</b><br>
+
+<div class="type ${r.type.cls}">
+${r.type.txt}
+</div><br><div class="status ${r.status.cls}">
+${r.status.txt}
+</div><br><div class="qtyTag">
+${r.qty}
+</div></div>
+</div><div class="right"><div class="price">
+${r.price} บาท
+</div><div style="display:flex;gap:5px;margin-top:5px;justify-content:flex-end;"><button onclick="bill(${i})"
+style="
+border:none;
+background:#ffd9e7;
+padding:6px 10px;
+border-radius:10px;
+">
+🧾
+</button>
+
+<button onclick="del(${i})"
+style="
+border:none;
+background:#ffe0e0;
+padding:6px 10px;
+border-radius:10px;
+color:red;
+">
+🗑️
+</button>
+
+</div></div></div>`;
+
+});
+
+list.innerHTML=html;
+
+noti.innerText=data.length;
+}
+
+/* ===========================
+BILL
+=========================== */
+
+function bill(i){
+
+let r=data[i];
+
+bName.innerText="ลูกค้า : "+r.name;
+
+bType.innerText="ประเภทงาน : "+r.type.txt;
+
+bStatus.innerText="สถานะ : "+r.status.txt;
+
+bQty.innerText="จำนวน : "+r.qty;
+
+bTotal.innerText="รวม : "+r.price+" บาท";
+
+show("billPage");
+}
+
+/* ===========================
+COPY
+=========================== */
+
+function copyPay(){
+
+navigator.clipboard.writeText("TRUEWALLET : 0972962083 SCB : 9692138645 PROMPTPAY : 0841169561");
+
+alert("คัดลอกเลขบัญชีแล้ว 💖");
+}
+
+updateExtra();
+
+render();
