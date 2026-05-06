@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lana Store</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Kanit',sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+background:linear-gradient(180deg,#fff7fb 0%,#fff0f6 100%);
+padding-bottom:120px;
+color:#333;
+overflow-x:hidden;
+}
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background-image:radial-gradient(#ffd6e7 1px, transparent 1px);
+background-size:20px 20px;
+opacity:.35;
+pointer-events:none;
+z-index:-1;
+}
+
+.page{
+display:none;
+animation:fade .25s ease;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(10px);
+}
+to{
+opacity:1;
+transform:none;
+}
+}
+
+.active{
+display:block;
+}
+
+/* HEADER */
+
+.header{
+padding:12px 14px 8px;
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:10px;
+}
+
+.title{
+display:flex;
+flex-direction:column;
+align-items:flex-start;
+gap:10px;
+font-size:22px;
+font-weight:700;
+color:#ff4f8c;
+width:100%;
+}
+
+.topBanner{
+width:100%;
+max-width:520px;
+height:120px;
+border-radius:26px;
+object-fit:cover;
+border:6px solid #ff5f5f;
+box-shadow:0 8px 20px rgba(255,105,150,.18);
+}
+
+.logo{
+width:75px;
+height:75px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid #fff;
+box-shadow:0 5px 20px rgba(255,105,150,.2);
+background:#fff;
+}
+
+.storeRow{
+display:flex;
+align-items:center;
+gap:14px;
+margin-left:8px;
+}
+
+.bell{
+position:relative;
+font-size:26px;
+background:#fff;
+width:55px;
+height:55px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+box-shadow:0 5px 18px rgba(255,105,150,.15);
+flex-shrink:0;
+}
+
+.badge{
+position:absolute;
+top:-4px;
+right:-4px;
+background:#ff2f7d;
+color:#fff;
+width:24px;
+height:24px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:11px;
+font-weight:700;
+border:3px solid #fff;
+}
+
+.searchWrap{
+padding:0 14px;
+}
+
+.search{
+background:#fff;
+padding:16px;
+border-radius:24px;
+display:flex;
+align-items:center;
+gap:10px;
+box-shadow:0 8px 25px rgba(255,105,150,.08);
+border:2px solid #ffe3ee;
+}
+
+.search input{
+border:none;
+outline:none;
+width:100%;
+font-size:16px;
+background:none;
+}
+
+.tabs{
+display:flex;
+gap:10px;
+overflow:auto;
+padding:16px 14px;
+}
+
+.tabs::-webkit-scrollbar{
+display:none;
+}
+
+.tab{
+white-space:nowrap;
+padding:10px 16px;
+border-radius:18px;
+background:#fff;
+border:2px dashed #ffd0de;
+font-size:13px;
+font-weight:700;
+cursor:pointer;
+}
+
+.activeTab{
+background:linear-gradient(135deg,#ff5f9a,#ff85b2);
+color:#fff;
+border:none;
+}
+
+.card{
+background:#fff;
+margin:0 14px 18px;
+padding:18px;
+border-radius:36px;
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+box-shadow:0 10px 30px rgba(255,105,150,.08);
+border:2px solid #ffe5ef;
+position:relative;
+overflow:hidden;
+}
+
+.left{
+display:flex;
+gap:10px;
+align-items:flex-start;
+}
+
+.num{
+min-width:42px;
+width:42px;
+height:42px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+font-weight:700;
+color:#fff;
+margin-top:12px;
+}
+
+.n1{
+background:linear-gradient(135deg,#ff4f8c,#ff75ad);
+}
+
+.n2{
+background:linear-gradient(135deg,#ff9800,#ffbf5f);
+}
+
+.n3{
+background:linear-gradient(135deg,#5b9dff,#7eb7ff);
+}
+
+.n4{
+background:linear-gradient(135deg,#8b5cf6,#b18cff);
+}
+
+.avatar{
+width:58px;
+height:58px;
+border-radius:18px;
+overflow:hidden;
+background:#fff0f6;
+border:3px solid #ffd6e6;
+flex-shrink:0;
+}
+
+.avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.name{
+font-size:16px;
+font-weight:700;
+margin-bottom:2px;
+line-height:1.1;
+}
+
+.type{
+display:inline-block;
+padding:5px 9px;
+border-radius:12px;
+font-size:10px;
+margin-bottom:4px;
+font-weight:700;
+max-width:110px;
+}
+
+.t1{
+background:#ffdbe8;
+color:#ff4f8c;
+}
+
+.t2{
+background:#dcecff;
+color:#4285f4;
+}
+
+.t3{
+background:#ffe9c6;
+color:#ff9800;
+}
+
+.t4{
+background:#eadcff;
+color:#8b5cf6;
+}
+
+.status{
+display:inline-block;
+padding:5px 8px;
+border-radius:10px;
+font-size:10px;
+font-weight:700;
+margin-right:4px;
+margin-top:3px;
+}
+
+.s1{
+background:#ffdbe8;
+color:#ff4f8c;
+}
+
+.s2{
+background:#ffe8bf;
+color:#ff9800;
+}
+
+.s3{
+background:#fff3c6;
+color:#a17800;
+}
+
+.s4{
+background:#dcecff;
+color:#3498db;
+}
+
+.s5{
+background:#eadcff;
+color:#7d4dff;
+}
+
+.s6{
+background:#d9ffe8;
+color:#11a95c;
+}
+
+.qty{
+display:inline-block;
+padding:5px 8px;
+border-radius:10px;
+background:#f5f5f5;
+font-size:10px;
+font-weight:700;
+margin-top:3px;
+}
+
+.price{
+font-size:42px;
+font-weight:700;
+color:#ff4f8c;
+text-align:right;
+line-height:1;
+}
+
+.baht{
+font-size:18px;
+}
+
+.actionBtns{
+display:flex;
+gap:8px;
+margin-top:10px;
+justify-content:flex-end;
+}
+
+.billBtn{
+border:none;
+padding:10px 14px;
+border-radius:16px;
+background:#fff;
+border:2px solid #ffb6cb;
+color:#ff4f8c;
+font-weight:700;
+cursor:pointer;
+font-size:15px;
+}
+
+.delBtn{
+border:none;
+padding:10px 12px;
+border-radius:16px;
+background:#ffedf3;
+cursor:pointer;
+font-size:18px;
+}
+
+.fab{
+position:fixed;
+bottom:82px;
+left:50%;
+transform:translateX(-50%);
+width:80px;
+height:80px;
+border:none;
+border-radius:50%;
+background:linear-gradient(135deg,#ff5f9a,#ff7ab0);
+color:#fff;
+font-size:45px;
+box-shadow:0 10px 25px rgba(255,79,140,.4);
+cursor:pointer;
+z-index:999;
+border:5px solid #fff;
+}
+
+.nav{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#fff;
+display:flex;
+justify-content:space-around;
+padding:14px 0;
+border-top-left-radius:28px;
+border-top-right-radius:28px;
+box-shadow:0 -5px 20px rgba(0,0,0,.08);
+z-index:100;
+}
+
+.navItem{
+text-align:center;
+font-size:13px;
+color:#999;
+cursor:pointer;
+font-weight:600;
+}
+
+.activeNav{
+color:#ff4f8c;
+font-weight:700;
+}
+
+/* FORM */
+
+#formBox{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+display:none;
+align-items:center;
+justify-content:center;
+padding:15px;
+z-index:9999;
+backdrop-filter:blur(4px);
+}
+
+.formCard{
+background:#fff;
+width:100%;
+max-width:430px;
+padding:22px;
+border-radius:30px;
+position:relative;
+max-height:95vh;
+overflow:auto;
+}
+
+.closeForm{
+position:absolute;
+top:16px;
+right:18px;
+font-size:28px;
+cursor:pointer;
+color:#999;
+}
+
+.formTitle{
+text-align:center;
+font-size:30px;
+font-weight:700;
+color:#ff4f8c;
+margin-bottom:22px;
+}
+
+.label{
+font-size:16px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.input{
+width:100%;
+padding:16px;
+border-radius:18px;
+border:2px solid #eee;
+margin-bottom:18px;
+font-size:16px;
+outline:none;
+}
+
+.pinkInput{
+background:#fff6fa;
+border:2px solid #ffd5e5;
+}
+
+.qtyGrid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-bottom:18px;
+}
+
+.qtyBtn{
+border:2px solid #eee;
+border-radius:18px;
+padding:14px 6px;
+text-align:center;
+cursor:pointer;
+font-size:14px;
+font-weight:700;
+background:#fff;
+}
+
+.qtyBtn b{
+font-size:18px;
+}
+
+.activeQty{
+border-color:#ff4f8c;
+background:#fff3f8;
+color:#ff4f8c;
+}
+
+.smallQty{
+font-size:14px;
+padding:12px 4px;
+}
+
+.extraRow{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:14px;
+gap:10px;
+}
+
+.extraLabel{
+width:90px;
+font-size:16px;
+font-weight:600;
+}
+
+.counter{
+display:flex;
+align-items:center;
+overflow:hidden;
+border-radius:14px;
+border:2px solid #eee;
+}
+
+.counter button{
+width:42px;
+height:42px;
+border:none;
+background:#f3f3f3;
+font-size:26px;
+cursor:pointer;
+}
+
+.counter div{
+width:70px;
+text-align:center;
+font-size:22px;
+font-weight:700;
+}
+
+.extraPrice{
+width:70px;
+text-align:right;
+font-size:18px;
+font-weight:700;
+color:#ff4f8c;
+}
+
+.grandWrap{
+margin-top:20px;
+padding:18px 0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:22px;
+font-weight:700;
+border-top:2px solid #f3f3f3;
+}
+
+#grandTotal{
+color:#ff4f8c;
+font-size:34px;
+}
+
+.saveBtn{
+width:100%;
+height:62px;
+border:none;
+border-radius:22px;
+background:linear-gradient(135deg,#ff4f8c,#ff6aa8);
+color:#fff;
+font-size:24px;
+font-weight:700;
+margin-top:10px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="home" class="page active">
+
+<div class="header">
+
+<div class="title">
+
+<img class="topBanner" src="https://i.ibb.co/qLdpP8s4/IMG-20260502-165540.png">
+
+<div class="storeRow">
+
+<img class="logo" src="https://i.ibb.co/twmtyY1Q/file-000000006e9072079eaeace39f9d4dfa.png">
+
+<div style="font-size:22px;font-weight:700;">
+Lana Store
+</div>
+
+</div>
+
+</div>
+
+<div class="bell">
+💖
+<div class="badge" id="noti">0</div>
+</div>
+
+</div>
+
+<div class="searchWrap">
+<div class="search">
+🔍
+<input id="searchInput" placeholder="ค้นหาชื่อลูกค้า" onkeyup="render()">
+</div>
+</div>
+
+<div class="tabs">
+<div class="tab activeTab">ทั้งหมด</div>
+</div>
+
+<div id="list"></div>
+
+</div>
+
+<!-- FORM -->
+
+<div id="formBox">
+
+<div class="formCard">
+
+<div class="closeForm" onclick="closeForm()">
+✕
+</div>
+
+<div class="formTitle">
+🎀 เพิ่มคิวงานใหม่ 🎀
+</div>
+
+<div class="label">
+ชื่อลูกค้า
+</div>
+
+<input id="customerName" class="input" placeholder="กรอกชื่อลูกค้า">
+
+<div class="label">
+ประเภทงาน
+</div>
+
+<select id="typeSelect" class="input pinkInput">
+<option value="0">💖 สติกเกอร์รูปตัวเอง+แชท message</option>
+<option value="1">💙 ตัดรูปโปร่งใส</option>
+<option value="2">💛 ตัดรูปแม่ค้าสร้าง</option>
+<option value="3">💜 สติกเกอร์ไลน์</option>
+</select>
+
+<div class="label">
+สถานะ
+</div>
+
+<select id="statusSelect" class="input pinkInput">
+<option value="0">💗 รอคิว</option>
+<option value="1">🧡 กำลังดำเนินงาน</option>
+<option value="2">💛 ตัดแต่ง</option>
+<option value="3">💙 รอผลอนุมัติ</option>
+<option value="4">💜 แก้ไขงาน</option>
+<option value="5">💚 ส่งงานเรียบร้อย</option>
+</select>
+
+<div class="label">
+จำนวนรูป <span style="color:#999;font-size:13px;">(คิดอัตโนมัติ)</span>
+</div>
+
+<div class="qtyGrid">
+
+<div class="qtyBtn activeQty" onclick="selectQty(this,'8รูป',150)">
+<b>8รูป</b><br>
+150 ฿
+</div>
+
+<div class="qtyBtn" onclick="selectQty(this,'16รูป',250)">
+<b>16รูป</b><br>
+250 ฿
+</div>
+
+<div class="qtyBtn" onclick="selectQty(this,'24รูป',450)">
+<b>24รูป</b><br>
+450 ฿
+</div>
+
+<div class="qtyBtn" onclick="selectQty(this,'32รูป',600)">
+<b>32รูป</b><br>
+600 ฿
+</div>
+
+<div class="qtyBtn smallQty">
+1-5รูป
+</div>
+
+<div class="qtyBtn smallQty">
+10-20รูป
+</div>
+
+<div class="qtyBtn smallQty">
+30-40รูป
+</div>
+
+<div class="qtyBtn smallQty">
+50รูปขึ้นไป
+</div>
+
+</div>
+
+<div class="label">
+ราคาแยกรูปเพิ่มเติม
+</div>
+
+<div class="extraRow">
+
+<div class="extraLabel">
+5 บาท/รูป
+</div>
+
+<div class="counter">
+
+<button onclick="minus('five')">−</button>
+
+<div id="fiveCount">0</div>
+
+<button onclick="plus('five')">+</button>
+
+</div>
+
+<div class="extraPrice" id="fivePrice">
+0 ฿
+</div>
+
+</div>
+
+<div class="extraRow">
+
+<div class="extraLabel">
+10 บาท/รูป
+</div>
+
+<div class="counter">
+
+<button onclick="minus('ten')">−</button>
+
+<div id="tenCount">0</div>
+
+<button onclick="plus('ten')">+</button>
+
+</div>
+
+<div class="extraPrice" id="tenPrice">
+0 ฿
+</div>
+
+</div>
+
+<div class="extraRow">
+
+<div class="extraLabel">
+20 บาท/รูป
+</div>
+
+<div class="counter">
+
+<button onclick="minus('twenty')">−</button>
+
+<div id="twentyCount">0</div>
+
+<button onclick="plus('twenty')">+</button>
+
+</div>
+
+<div class="extraPrice" id="twentyPrice">
+0 ฿
+</div>
+
+</div>
+
+<div class="grandWrap">
+
+<div>
+รวมทั้งหมด
+</div>
+
+<div id="grandTotal">
+150 ฿
+</div>
+
+</div>
+
+<button class="saveBtn" onclick="saveQueue()">
+บันทึกคิวงาน 💖
+</button>
+
+</div>
+
+</div>
+
+<div class="nav">
+
+<div class="navItem activeNav">
+🏠<br>หน้าหลัก
+</div>
+
+<div class="navItem">
+🧾<br>บิล
+</div>
+
+</div>
+
+<button class="fab" onclick="openForm()">
++
+</button>
+
+<script>
+
+const LOGO="https://i.ibb.co/twmtyY1Q/file-000000006e9072079eaeace39f9d4dfa.png";
+
+let data=JSON.parse(localStorage.getItem("lanaQueue")) || [];
+
+let selectedQty="8รูป";
+let basePrice=150;
+
+let extra={
+five:0,
+ten:0,
+twenty:0
+};
+
+let types=[
+{txt:"สติกเกอร์รูปตัวเอง+แชท message",cls:"t1"},
+{txt:"ตัดรูปโปร่งใส",cls:"t2"},
+{txt:"ตัดรูปแม่ค้าสร้าง",cls:"t3"},
+{txt:"สติกเกอร์ไลน์",cls:"t4"}
+];
+
+let statusList=[
+{txt:"รอคิว",cls:"s1"},
+{txt:"กำลังดำเนินงาน",cls:"s2"},
+{txt:"ตัดแต่ง",cls:"s3"},
+{txt:"รอผลอนุมัติ",cls:"s4"},
+{txt:"แก้ไขงาน",cls:"s5"},
+{txt:"ส่งงานเรียบร้อย",cls:"s6"}
+];
+
+function openForm(){
+document.getElementById("formBox").style.display="flex";
+}
+
+function closeForm(){
+document.getElementById("formBox").style.display="none";
+}
+
+window.onclick=function(e){
+
+if(e.target.id=="formBox"){
+closeForm();
+}
+
+}
+
+function selectQty(el,qty,price){
+
+document.querySelectorAll(".qtyBtn").forEach(q=>{
+q.classList.remove("activeQty");
+});
+
+el.classList.add("activeQty");
+
+selectedQty=qty;
+basePrice=price;
+
+updateTotal();
+
+}
+
+function plus(type){
+
+extra[type]++;
+
+updateExtra();
+
+}
+
+function minus(type){
+
+if(extra[type]>0){
+extra[type]--;
+}
+
+updateExtra();
+
+}
+
+function updateExtra(){
+
+document.getElementById("fiveCount").innerText=extra.five;
+document.getElementById("tenCount").innerText=extra.ten;
+document.getElementById("twentyCount").innerText=extra.twenty;
+
+document.getElementById("fivePrice").innerText=(extra.five*5)+" ฿";
+document.getElementById("tenPrice").innerText=(extra.ten*10)+" ฿";
+document.getElementById("twentyPrice").innerText=(extra.twenty*20)+" ฿";
+
+updateTotal();
+
+}
+
+function updateTotal(){
+
+let total=
+basePrice+
+(extra.five*5)+
+(extra.ten*10)+
+(extra.twenty*20);
+
+document.getElementById("grandTotal").innerText=total+" ฿";
+
+}
+
+function saveQueue(){
+
+let name=document.getElementById("customerName").value;
+
+if(name==""){
+alert("กรอกชื่อลูกค้า");
+return;
+}
+
+let total=
+basePrice+
+(extra.five*5)+
+(extra.ten*10)+
+(extra.twenty*20);
+
+data.push({
+name:name,
+type:types[typeSelect.value],
+status:statusList[statusSelect.value],
+qty:selectedQty,
+price:total
+});
+
+localStorage.setItem("lanaQueue",JSON.stringify(data));
+
+render();
+
+closeForm();
+
+document.getElementById("customerName").value="";
+
+extra={
+five:0,
+ten:0,
+twenty:0
+};
+
+updateExtra();
+
+}
+
+function render(){
+
+let html="";
+
+data.forEach((r,i)=>{
+
+html+=`
+
+<div class="card">
+
+<div class="left">
+
+<div class="num n${(i%4)+1}">
+${i+1}
+</div>
+
+<div class="avatar">
+<img src="${LOGO}">
+</div>
+
+<div>
+
+<div class="name">
+${r.name}
+</div>
+
+<div class="type ${r.type.cls}">
+${r.type.txt}
+</div>
+
+<br>
+
+<div class="status ${r.status.cls}">
+${r.status.txt}
+</div>
+
+<div class="qty">
+${r.qty}
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div class="price">
+${r.price}<span class="baht">฿</span>
+</div>
+
+<div class="actionBtns">
+
+<button class="billBtn">
+🧾 บิล
+</button>
+
+<button class="delBtn" onclick="deleteQueue(${i})">
+🗑️
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("list").innerHTML=html;
+document.getElementById("noti").innerText=data.length;
+
+}
+
+function deleteQueue(i){
+
+if(confirm("ลบคิวนี้ ?")){
+
+data.splice(i,1);
+
+localStorage.setItem("lanaQueue",JSON.stringify(data));
+
+render();
+
+}
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
